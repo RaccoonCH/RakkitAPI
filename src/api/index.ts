@@ -32,7 +32,7 @@ scanDirSync(__dirname, file => {
     router.use(`/${file}`, apiRouter)
     console.log(`API: ${file} - IMPORTED ✅`)
   } else {
-    console.log(`API: ${file} - router.js is required ❌`)
+    console.log(`API: ${file} - router.ts is required ❌`)
   }
 })
 
