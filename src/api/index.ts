@@ -1,11 +1,16 @@
+import { color } from '../utils/color'
 import { Router } from 'express'
 import { scanDirSync, fileExistsSync } from '../utils/file'
 const router = Router()
 
+const getFilePath = (file, a): string => {
+  return `./${file}/${a}.ts`
+}
+
 scanDirSync(__dirname, file => {
   // Run before api import
-  const routerFile = `./${file}/router.ts`
-  const middlewareFile = `./${file}/middleware.ts`
+  const routerFile = getFilePath(file, 'router')
+  const middlewareFile = getFilePath(file, 'middleware')
   if (fileExistsSync(__dirname, routerFile)) {
     // Load middlewares if middleware.js file exists
     const middlewares = fileExistsSync(__dirname, middlewareFile) && require(`./${file}/middleware`).default
@@ -30,9 +35,9 @@ scanDirSync(__dirname, file => {
   
     // Import API
     router.use(`/${file}`, apiRouter)
-    console.log(`API: ${file} - IMPORTED ✅`)
+    console.log('✅  API:', color(`${file}`, 'fg.green'))
   } else {
-    console.log(`API: ${file} - router.ts is required ❌`)
+    console.log(`❌  API: ${file} - ` + color('router.ts is required', 'fg.red'))
   }
 })
 
