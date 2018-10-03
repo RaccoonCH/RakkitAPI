@@ -15,6 +15,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "mysql": "^2.16.0",
     "typeorm": "^0.2.7"
   },
   "devDependencies": {

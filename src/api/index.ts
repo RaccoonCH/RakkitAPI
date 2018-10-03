@@ -1,3 +1,4 @@
+import { color } from '../utils/color'
 import { Router } from 'express'
 import { scanDirSync, fileExistsSync } from '../utils/file'
 const router = Router()
@@ -34,9 +35,9 @@ scanDirSync(__dirname, file => {
   
     // Import API
     router.use(`/${file}`, apiRouter)
-    console.log(`API: ${file} - IMPORTED ✅`)
+    console.log(color(`✅  API: ${file}`, 'fg.green'))
   } else {
-    console.log(`API: ${file} - router.ts is required ❌`)
+    console.log(`❌  API: ${file} - ` + color('router.ts is required', 'fg.red'))
   }
 })
 

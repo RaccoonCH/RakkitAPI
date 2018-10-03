@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import { getConnectionOptions, createConnection} from 'typeorm'
 import { createServer } from 'http'
+import { color } from './utils/color'
 import api from './api'
 
 getConnectionOptions().then(createConnection).catch(console.error)
@@ -23,5 +24,5 @@ app.use('/api', api)
 // Ignore the host value error
 // @ts-ignore
 server.listen(port, host, () => {
-  console.log(`Started on ${host}:${port}`)
+  console.log(color(`\nStarted on ${host}:${port}\n`, 'fg.black', 'bg.green'))
 })

@@ -6,6 +6,9 @@ export default class Page extends BaseEntity {
   id: number
 
   @Column()
+  name: string
+
+  @Column()
   content: string
 
   @Column()
