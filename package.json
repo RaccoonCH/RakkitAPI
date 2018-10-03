@@ -15,15 +15,12 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "sails-disk": "^1.0.1",
-    "sails-mongo": "^1.0.1",
-    "sails-mysql": "^1.0.0",
-    "sails-postgresql": "^1.0.1",
     "typeorm": "^0.2.7"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
     "@types/node": "^10.11.3",
+    "jest": "^23.6.0",
     "nodemon": "^1.18.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.1"
