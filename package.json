@@ -9,7 +9,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon",
-    "new": "ts-node scripts/new"
+    "new:ro": "ts-node scripts/new"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

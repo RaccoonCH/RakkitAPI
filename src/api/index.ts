@@ -35,7 +35,7 @@ scanDirSync(__dirname, file => {
   
     // Import API
     router.use(`/${file}`, apiRouter)
-    console.log(color(`✅  API: ${file}`, 'fg.green'))
+    console.log('✅  API:', color(`${file}`, 'fg.green'))
   } else {
     console.log(`❌  API: ${file} - ` + color('router.ts is required', 'fg.red'))
   }
