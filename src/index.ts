@@ -2,8 +2,11 @@ import * as path from 'path'
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
+import { getConnectionOptions, createConnection} from 'typeorm'
 import { createServer } from 'http'
 import api from './api'
+
+getConnectionOptions().then(createConnection).catch(console.error)
 
 const host = 'localhost'
 const port = 4000

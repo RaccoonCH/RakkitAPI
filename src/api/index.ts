@@ -2,10 +2,14 @@ import { Router } from 'express'
 import { scanDirSync, fileExistsSync } from '../utils/file'
 const router = Router()
 
+const getFilePath = (file, a): string => {
+  return `./${file}/${a}.ts`
+}
+
 scanDirSync(__dirname, file => {
   // Run before api import
-  const routerFile = `./${file}/router.ts`
-  const middlewareFile = `./${file}/middleware.ts`
+  const routerFile = getFilePath(file, 'router')
+  const middlewareFile = getFilePath(file, 'middleware')
   if (fileExistsSync(__dirname, routerFile)) {
     // Load middlewares if middleware.js file exists
     const middlewares = fileExistsSync(__dirname, middlewareFile) && require(`./${file}/middleware`).default
