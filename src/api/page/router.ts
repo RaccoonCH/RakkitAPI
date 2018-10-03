@@ -1,9 +1,4 @@
-import controller from './page/controller'
+import controller from './controller'
 
 export default [
-  {
-    method: 'get',
-    route: '/',
-    functions: controller.hello
-  }
 ]
