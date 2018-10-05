@@ -10,7 +10,7 @@ const flags = allArgs.filter(a => a[0] === '-')
 const args = allArgs.filter(a => a[0] !== '-')
 const injected: Map<string, string> = new Map()
 const injectVariable: Map<string, Array<string>> = new Map([
-  ['model', ['model', args[0]]]
+  ['model', ['model', args[0].replace(/./, args[0].toUpperCase()[0])]]
 ])
 
 for (let key of injectVariable.keys()) {

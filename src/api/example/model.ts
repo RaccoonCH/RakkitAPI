@@ -11,6 +11,6 @@ export default class example extends BaseEntity {
   id: number
 
   @Column()
-  name: string  
+  name: string
 }
  
