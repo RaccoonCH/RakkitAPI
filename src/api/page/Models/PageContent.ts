@@ -17,7 +17,7 @@ export default class PageContent extends BaseEntity {
   @Column('text')
   content: string
 
-  @ManyToOne(type => Culture, culture => culture.pages)
+  @ManyToOne(type => Culture, culture => culture.pageContents)
   culture: Culture
 
   @ManyToOne(type => Page, page => page.contents)

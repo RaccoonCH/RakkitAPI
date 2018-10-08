@@ -21,8 +21,8 @@ export default {
       res.status(403).send('infos:invalid')
     }
   },
-  /*
   async update (req, res) {
+    /*
     const { id } = req.params
     const { name, content, model, cultureID } = req.body
     if (id && content && model && cultureID) {
@@ -48,6 +48,6 @@ export default {
     } else {
       res.status(403).send('infos:invalid')
     }
+    */
   }
-  */
 }
