@@ -3,7 +3,7 @@ import * as path from 'path'
 
 const ext = '.ts'
 const templateFolder = path.join(__dirname, 'template/')
-const filesToCopy = ['controller', 'router', 'model']
+const filesToCopy = ['controller', 'router', 'model', 'config']
 const rootDir = process.cwd()
 const allArgs = process.argv.splice(2, process.argv.length).map(a => a.toLowerCase())
 const flags = allArgs.filter(a => a[0] === '-')
