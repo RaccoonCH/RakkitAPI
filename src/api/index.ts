@@ -3,15 +3,28 @@ import { Router } from 'express'
 import { scanDirSync, fileExistsSync } from '../utils/file'
 const router = Router()
 
-const getFilePath = (file, a): string => {
-  return `./${file}/${a}.ts`
+const ROs = []
+
+const getFilePath = (file, a, ext = 'ts'): string => {
+  return `./${file}/${a}.${ext.toLowerCase()}`
 }
 
 scanDirSync(__dirname, file => {
   // Run before api import
   const routerFile = getFilePath(file, 'router')
   const middlewareFile = getFilePath(file, 'middleware')
+  const configFile = getFilePath(file, 'config')
   if (fileExistsSync(__dirname, routerFile)) {
+    let RO = {
+      name: file
+    }
+    if (fileExistsSync(__dirname, configFile)) {
+      RO = {
+        ...RO,
+        ...require(configFile).default
+      }
+    }
+    ROs.push(RO)
     // Load middlewares if middleware.js file exists
     const middlewares = fileExistsSync(__dirname, middlewareFile) && require(`./${file}/middleware`).default
     const apiRouterConfig = require(routerFile).default
@@ -40,5 +53,7 @@ scanDirSync(__dirname, file => {
     console.log(`❌  API: ${file} - ` + color('router.ts is required', 'fg.red'))
   }
 })
+
+router.get('/ro', (req, res) => res.send(ROs))
 
 export default router
