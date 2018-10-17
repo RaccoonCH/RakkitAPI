@@ -1,29 +1,29 @@
-import Model from './ExampleModel'
+import ExampleModel from './ExampleModel'
 import { Query, Resolver } from 'type-graphql'
 
-@Resolver(Model)
-export default class Controller {
-  @Query(returns => [Model])
+@Resolver(ExampleModel)
+export default class ExampleController {
+  @Query(returns => [ExampleModel])
   getAll() {
-    return Model.find()
+    return ExampleModel.find()
   }
 
   static async getOne (req, res) {
-    res.send(await Model.findOne(req.params.id))
+    res.send(await ExampleModel.findOne(req.params.id))
     // findOne({id: req.params.id}) works too
   }
 
   static async getAll (req, res) {
-    res.send(await Model.find())
+    res.send(await ExampleModel.find())
   }
 
   static async create (req, res) {
-    const m = new Model(req.body.name, req.body.text)
+    const m = new ExampleModel(req.body.name, req.body.text)
     res.send(await m.save())
   }
 
   static async update (req, res) {
-    const m = await Model.findOne(req.params.id)
+    const m = await ExampleModel.findOne(req.params.id)
     if (m) {
       m.name = req.body.name
       await m.save()
@@ -34,7 +34,7 @@ export default class Controller {
   }
 
   static async remove (req, res) {
-    const m = await Model.findOne(req.params.id)
+    const m = await ExampleModel.findOne(req.params.id)
     if (m) {
       m.remove()
       res.send(m)

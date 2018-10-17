@@ -1,9 +1,9 @@
-import Controller from './controller'
+import ExampleController from './ExampleController'
 
 export default [
-  ['get', '/', Controller.getAll],
-  ['get', '/:id', Controller.getOne],
-  ['post', '/', Controller.create],
-  ['put', '/:id', Controller.update],
-  ['delete', '/:id', Controller.update]
+  ['get', '/', ExampleController.getAll],
+  ['get', '/:id', ExampleController.getOne],
+  ['post', '/', ExampleController.create],
+  ['put', '/:id', ExampleController.update],
+  ['delete', '/:id', ExampleController.update]
 ]
