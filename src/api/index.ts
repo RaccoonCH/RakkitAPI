@@ -1,8 +1,8 @@
-import { RakkitPackage } from './../types/FrontTypes/RakkitPackage'
-import { color } from '../utils/color'
 import { Router } from 'express'
+import { color } from '../utils/color'
 import { scanDirSync, fileExistsSync, getFilePath } from '../utils/file'
-import IRakkitType from '../types/FrontTypes/IRakkitType'
+import RakkitPackage from './../types/FrontTypes/RakkitPackage'
+import IRakkitType from '../types/FrontTypes/IRakkitFrontType'
 const router = Router()
 
 const RPs: RakkitPackage[] = []

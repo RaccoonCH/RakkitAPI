@@ -1,4 +1,4 @@
-export class RakkitPackage {
+export default class RakkitPackage {
   ID: string
   Name: string
   Description: string
