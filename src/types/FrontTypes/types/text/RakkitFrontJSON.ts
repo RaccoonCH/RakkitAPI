@@ -1,7 +1,8 @@
-import IRakkitType from '../IRakkitType'
+import IRakkitFrontType from '../../IRakkitFrontType'
+import IRakkitFrontText from '../../IRakkitFrontText'
 
-export default class RakkitShortText implements IRakkitType {
-  TypeName: string = 'text:short'
+export default class RakkitFrontJSON implements IRakkitFrontType, IRakkitFrontText {
+  TypeName: string = 'text:json'
   IsEditable: boolean
   IsInHeader: boolean
   IsSearchable: boolean

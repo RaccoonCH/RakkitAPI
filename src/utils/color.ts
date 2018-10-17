@@ -37,7 +37,7 @@ const textCustom = {
  * @param text The text to colorize
  * @param params The color params
  */
-export const color = (text, ...params: string[]) => {
+export default (text, ...params: string[]) => {
   let resText = ''
   params.forEach(p => {
     const v = p.split('.')
