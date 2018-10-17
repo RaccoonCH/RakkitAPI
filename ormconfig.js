@@ -7,8 +7,6 @@ module.exports = {
   database: 'rakkit',
   synchronize: true,
   entities: [
-    `${__dirname}/src/api/*/Models/*.ts`,
-    `${__dirname}/src/api/*/models/*.ts`,
-    `${__dirname}/src/api/*/model.ts`
+    `${__dirname}/src/api/*/*Model.ts`
   ]
 }

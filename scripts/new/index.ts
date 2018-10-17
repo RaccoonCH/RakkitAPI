@@ -17,19 +17,30 @@ const flags = allArgs.filter(a => a[0] === '-')
 const args = allArgs.filter(a => a[0] !== '-')
 const injected: Map<string, string> = new Map()
 const RPNameUpperFirstLetter = getUppercaseFirstLetter(args[0])
-const injectVariable: Map<string, Array<string>> = new Map([
+const injectVariable: Map<string, Array<Array<string>>> = new Map([
   // [FILE, [VARIABLE, REPLACE_WITH]]
-  ['model', ['model', RPNameUpperFirstLetter]],
-  ['controller', ['model_file', getRPObjectName('model')]],
-  ['router', ['controller_file', getRPObjectName('controller')]]
+  ['model', [
+    ['model', RPNameUpperFirstLetter]
+  ]],
+  ['controller', [
+    ['model_file', getRPObjectName('model')],
+    ['controller', getRPObjectName('controller')],
+    ['rp_name', RPNameUpperFirstLetter]
+  ]],
+  ['router', [
+    ['controller_file', getRPObjectName('controller')]
+  ]]
 ])
 //#endregion
 
 // Inject variable into the into the file
 for (let key of injectVariable.keys()) {
-  const valuesToReplace = injectVariable.get(key)
-  // Replace all value that match with the variable name
-  injected.set(key, fs.readFileSync(getFilePath(templateFolder, key)).toString('utf-8').replace(new RegExp(`_${valuesToReplace[0].toUpperCase()}_`, 'g'), valuesToReplace[1]))
+  let newValue: string = fs.readFileSync(getFilePath(templateFolder, key), 'utf-8')
+  injectVariable.get(key).forEach(iv => {
+    // Replace all value that match with the variable name
+    newValue = newValue.replace(new RegExp(`_${iv[0].toUpperCase()}_`, 'g'), iv[1])
+  })
+  injected.set(key, newValue)
 }
 
 // If the flag -m exists, add the middleware file

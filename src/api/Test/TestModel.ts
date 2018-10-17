@@ -5,10 +5,10 @@ import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontS
 import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 
-@Package(new RakkitPackage('_MODEL_ package'))
+@Package(new RakkitPackage('Test package'))
 @ObjectType()
-@Entity({name: '_MODEL_SIMPLE_NAME_'})
-export default class _MODEL_ extends BaseEntity {
+@Entity({name: 'TestSIMPLE_NAME_'})
+export default class Test extends BaseEntity {
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
