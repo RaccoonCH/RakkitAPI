@@ -7,6 +7,9 @@ import { getConnectionOptions, createConnection} from 'typeorm'
 import { createServer } from 'http'
 import { color } from './utils/color'
 import api from './api'
+import cultureResolver from './api/culture/resolver'
+import * as typeGQL from 'type-graphql'
+import { ApolloServer, gql } from 'apollo-server-express'
 
 getConnectionOptions().then(createConnection).catch(console.error)
 
@@ -22,8 +25,19 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 app.use('/api', api)
 
+typeGQL.buildSchema({
+  resolvers: [cultureResolver]
+}).then((schema) => {
+  const apolloServer = new ApolloServer({schema})
+  apolloServer.applyMiddleware({app})
+  console.log(color(`\nGraphQL: Started on http://${host}:${port}${apolloServer.graphqlPath}`, 'fg.black', 'bg.green'))
+}).catch(console.error)
+
+
+
 // Ignore the host value error
 // @ts-ignore
 server.listen(port, host, () => {
-  console.log(color(`\nStarted on ${host}:${port}\n`, 'fg.black', 'bg.green'))
+  console.log(color(`Express: Started on http://${host}:${port}\n`, 'fg.black', 'bg.green'))
 })
+
