@@ -25,4 +25,3 @@ export default class Lang extends BaseEntity {
   @OneToMany(type => Culture, culture => culture.lang)
   cultures: Culture[]
 }
- 
