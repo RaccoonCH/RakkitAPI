@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "author": "Raccoon SARL",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon",
