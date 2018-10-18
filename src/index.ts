@@ -7,9 +7,10 @@ import { getConnectionOptions, createConnection} from 'typeorm'
 import { createServer } from 'http'
 import color from './utils/color'
 import * as TypeGraphQL from 'type-graphql'
-import { ApolloServer} from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import api from './api'
 
+// Get ormconfig.ts file content and create the connection to the database
 getConnectionOptions().then(createConnection).catch(console.error)
 
 const host = 'localhost'
@@ -21,7 +22,11 @@ const server = createServer(app)
 app.use(cors())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+
+// Server the public folder to be served as a static folder
 app.use('/', express.static(path.join(__dirname, '../public')))
+
+// Load the api returned router into the /api route
 app.use('/api', api.router)
 
 // Build TypeGraphQL schema to use it

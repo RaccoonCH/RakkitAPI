@@ -1,4 +1,4 @@
-import { Router, Express } from 'express'
+import { Router } from 'express'
 import color from '../utils/color'
 import { scanDirSync, fileExistsSync, getFilePath } from '../utils/file'
 import RakkitPackage from './../types/FrontTypes/RakkitPackage'
@@ -12,15 +12,15 @@ let RPsAttributes: Object = {}
 /**
  * Declare a RakkitPackge to show into front-end
  * It always called after Attribute decorator
- * @param rPackage The RakkitPackage object with informations (description, icon, ...)
+ * @param rakkitPackage The RakkitPackage object with informations (description, icon, ...)
  */
-export const Package = (rPackage: RakkitPackage) => {
+export const Package = (rakkitPackage: RakkitPackage) => {
   return (target: Function) => {
     const className = target.name.toLowerCase()
     RPs.push({
       ID: className,
       Name: target.name,
-      ...rPackage,
+      ...rakkitPackage,
       Attributes: RPsAttributes[className],
     })
   }
@@ -82,6 +82,7 @@ scanDirSync(__dirname, (file: string) => {
       const route = r[list ? 1 : 'route'] 
       let functions = r[list ? 2 : 'functions']
       functions = Array.isArray(functions) ? functions : [functions]
+      // apiRouter.get('/...', () => {...})
       apiRouter[method](route, ...functions)
     })
   
@@ -92,7 +93,7 @@ scanDirSync(__dirname, (file: string) => {
     router.use(`/${file.toLocaleLowerCase()}`, apiRouter)
     console.log('✅  API:', color(`${file.toLocaleLowerCase()}`, 'fg.green'))
   } else {
-    console.log(`❌  API: ${file} - ` + color('router.ts is required', 'fg.red'))
+    console.log(`❌  API: ${file} - ` + color('router is required', 'fg.red'))
   }
 })
 
