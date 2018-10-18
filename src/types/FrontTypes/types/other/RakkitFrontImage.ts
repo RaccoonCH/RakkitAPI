@@ -7,12 +7,12 @@ export default class RakkitFrontObject implements IRakkitFrontType {
   IsSearchable: boolean
   PlaceOrder: number
   Placeholder: string
-  URL: string
   SizeUnit: string
   MaxSize: number
+  AcceptedMIME: string[]
 
-  constructor(url: string, sizeUnit: string, maxSize: number, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
-    this.URL = url
+  constructor(acceptedMIME: string[], sizeUnit: string, maxSize: number, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+    this.AcceptedMIME = acceptedMIME
     this.SizeUnit = sizeUnit
     this.MaxSize = maxSize
     this.IsEditable = isEditable
