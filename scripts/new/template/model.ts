@@ -7,7 +7,7 @@ import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 
 @Package(new RakkitPackage('_MODEL_ package'))
 @ObjectType()
-@Entity({name: '_MODEL_SIMPLE_NAME_'})
+@Entity({name: '_MODEL_'})
 export default class _MODEL_ extends BaseEntity {
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
