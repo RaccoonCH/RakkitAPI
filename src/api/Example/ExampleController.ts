@@ -12,7 +12,7 @@ export default class ExampleController {
   // The @Root refers to the self element instance
   @FieldResolver()
   nameToUppercase(@Root() exampleInstance: ExampleModel): string {
-    return exampleInstance.name.toLocaleUpperCase()
+    return exampleInstance.Name.toLocaleUpperCase()
   }
   //#endregion
 
@@ -34,7 +34,7 @@ export default class ExampleController {
   static async update (req, res) {
     const m = await ExampleModel.findOne(req.params.id)
     if (m) {
-      m.name = req.body.name
+      m.Name = req.body.name
       await m.save()
       res.send(m)
     } else {
