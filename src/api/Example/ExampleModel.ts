@@ -9,25 +9,44 @@ import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {
+  private _id: number
+  private _name: string
+  private _text: string
+
   constructor (name: string, text: string) {
     super()
-    this.name = name
-    this.text = text
+    this.Name = name
+    this.Text = text
   }
 
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  id: number
+  public get Id(): number {
+    return this._id
+  }
+  public set Id(val: number) {
+    this._id = val
+  }
 
-  @Attribute(new RakkitFrontShortText('Enter the name'))
+  @Attribute(new RakkitFrontShortText())
   @Field()
   @Column()
-  name: string
+  public get Name(): string {
+    return this._name
+  }
+  public set Name(val: string) {
+    this._name = val
+  }
 
-  @Attribute(new RakkitFrontShortText('Enter your text'))
+  @Attribute(new RakkitFrontShortText())
   @Field()
   @Column()
-  text: string
+  public get Text(): string {
+    return this._text
+  }
+  public set Text(val: string) {
+    this._text = val
+  }
 }
  
