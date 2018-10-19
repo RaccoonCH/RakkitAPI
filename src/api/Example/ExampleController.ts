@@ -1,5 +1,5 @@
 import ExampleModel from './ExampleModel'
-import { Query, Resolver, FieldResolver, Root, Args } from 'type-graphql'
+import { Query, Resolver, FieldResolver, Root } from 'type-graphql'
 
 @Resolver(ExampleModel)
 export default class ExampleController {
