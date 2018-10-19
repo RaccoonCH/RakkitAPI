@@ -1,8 +1,14 @@
 import { BaseEntity } from 'typeorm'
+
 const queryModelName = 'model'
 
-const getQueryFieldName = (fieldName: string) => queryModelName + '.' + fieldName
-const getConditionString = (mainProp: string, subProp: string) => `${mainProp}.${subProp} = :${subProp}`
+function getQueryFieldName(fieldName: string, mainField: string = null) {
+  return `${mainField || queryModelName}.${fieldName}`
+}
+
+function getConditionString (mainField: string, subField: string) {
+  return `${getQueryFieldName(subField, mainField)} = :${subField}`
+}
 
 /**
  * Parse the GraphQL query params and execute it with TypeORM
@@ -11,50 +17,32 @@ const getConditionString = (mainProp: string, subProp: string) => `${mainProp}.$
  */
 export function composeQuery(model: typeof BaseEntity, obj: Object) {
   const queryBuilder = model.createQueryBuilder(queryModelName)
-  const queryObj = []
-  // Parse relations
-  Object.getOwnPropertyNames(obj)
-  .map((prop: string) => {
-    const value = obj[prop]
-    if (value !== undefined) {
-      const queryFieldName = getQueryFieldName(prop)
-      if (typeof obj[prop] === 'object') {
-        queryBuilder.innerJoinAndSelect(queryFieldName, prop)
-        const relationObj = <Object>value
-        Object.getOwnPropertyNames(relationObj).map(ro => {
-          queryObj.push({
-            condition: getConditionString(prop,  ro),
-            value: {[ro]: relationObj[ro]}
-          })
-        })
-      } else {
-        queryObj.push({
-          condition: getConditionString(queryModelName, prop),
-          value: {[prop]: value}
-        })
-      }
-    }
-  })
-  queryObj.map((query: {condition: string, value: {}}, index: number) => {
-    if (index > 0) {
-      queryBuilder.andWhere(query.condition, query.value)
-    } else {
-      queryBuilder.where(query.condition, query.value)
-    }
-  })
-  return queryBuilder
-}
+  let oneWhereCondition = false
+  const parseObjToQuery = (obj, mainField = queryModelName) => {
+    Object.getOwnPropertyNames(obj).map((prop: string) => {
+      const value = obj[prop]
+      // Ignore the GraphQL query parameter if the value is not given (= undefined)
+      if (value !== undefined) {
+        // If the given value is a relation, join the table anf add the coditions in the where
+        if (value.relation) {
+          queryBuilder.innerJoinAndSelect(getQueryFieldName(value.relation), value.relation)
+          parseObjToQuery(value.value, value.relation)
+        } else {
+          // Add the where condition to the query
+          const whereCondition = getConditionString(mainField, prop)
+          const whereValueToReplace = { [prop]: value }
+          if (oneWhereCondition) {
+            queryBuilder.andWhere(whereCondition, whereValueToReplace)
+          } else {
+            queryBuilder.where(whereCondition, whereValueToReplace)
+          }
 
-/** If a value is not passed into params, ingore this value into where condition
- * @param obj The args object
- */
-export function where(obj: Object) {
-  return Object.getOwnPropertyNames(obj)
-  .reduce((finalObj: Object, prop: string) => {
-    const VALUE = obj[prop]
-    if (VALUE !== undefined) {
-      finalObj[prop] = VALUE
-    }
-    return finalObj
-  }, {})
+          // To indicate andWhere or where
+          oneWhereCondition = true
+        }
+      }
+    })
+  }
+  parseObjToQuery(obj)
+  return queryBuilder
 }
