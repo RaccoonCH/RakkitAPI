@@ -9,14 +9,27 @@ import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 @ObjectType()
 @Entity({name: '_MODEL_'})
 export default class _MODEL_ extends BaseEntity {
+  private _id: number
+  private _name: string
+
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  id: number
+  public get Id(): number {
+    return this._id
+  }
+  public set Id(val: number) {
+    this._id = val
+  }
 
   @Attribute(new RakkitFrontShortText('Enter the name here'))
   @Field()
   @Column()
-  name: string
+  public get Name(): string {
+    return this._name
+  }
+  public set Name(val: string) {
+    this._name = val
+  }
 }
  
