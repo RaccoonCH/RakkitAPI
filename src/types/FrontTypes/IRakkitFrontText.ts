@@ -1,3 +1,3 @@
 export default interface IRakkitFrontType {
-  Placeholder: string
+  Placeholder?: string
 }
