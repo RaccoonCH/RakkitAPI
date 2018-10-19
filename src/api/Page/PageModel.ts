@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
-import { ObjectType, Field, ID } from 'type-graphql'
+import { ObjectType, Field, ID, InputType } from 'type-graphql'
 import { Package, Attribute } from '..'
 import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
 import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
@@ -7,7 +7,8 @@ import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 import Culture from '../Culture/CultureModel'
 import RakkitFrontObject from '../../types/FrontTypes/types/other/RakkitFrontObject';
 
-@Package(new RakkitPackage('Page package'))
+@Package(new RakkitPackage())
+@InputType('PageInput')
 @ObjectType()
 @Entity({name: 'Page'})
 export default class Page extends BaseEntity {
@@ -40,7 +41,7 @@ export default class Page extends BaseEntity {
 
   @Attribute(new RakkitFrontShortText())
   @Field()
-  @Column()
+  @Column('simple-json')
   public get Model(): string {
     return this._model
   }
@@ -50,7 +51,7 @@ export default class Page extends BaseEntity {
 
   @Attribute(new RakkitFrontShortText())
   @Field()
-  @Column()
+  @Column('simple-json')
   public get Content(): string {
     return this._content
   }

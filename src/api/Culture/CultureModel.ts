@@ -1,22 +1,23 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { ObjectType, Field, ID } from 'type-graphql'
+import { ObjectType, Field, ID, InputType } from 'type-graphql'
 import { Package, Attribute } from '..'
 import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
 import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
-import Page from '../Page/PageModel';
+import Page from '../Page/PageModel'
 
-@Package(new RakkitPackage('Culture package'))
+@Package(new RakkitPackage())
+@InputType('cultureInput')
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {
+  private _pages: Page[]
   private _id: number
   private _langCode: string
   private _countryCode: string
-  private _pages: Page[]
 
   @Attribute(new RakkitFrontID())
-  @Field(type => ID)
+  @Field(type => ID, {nullable: true})
   @PrimaryGeneratedColumn()
   public get Id(): number {
     return this._id
@@ -26,7 +27,7 @@ export default class Culture extends BaseEntity {
   }
 
   @Attribute(new RakkitFrontShortText())
-  @Field()
+  @Field({nullable: true})
   @Column()
   public get LangCode(): string {
     return this._langCode
@@ -36,7 +37,7 @@ export default class Culture extends BaseEntity {
   }
 
   @Attribute(new RakkitFrontShortText())
-  @Field()
+  @Field({nullable: true})
   @Column()
   public get CountryCode(): string {
     return this._countryCode
@@ -46,12 +47,12 @@ export default class Culture extends BaseEntity {
   }
 
   @Attribute(new RakkitFrontShortText(null, true, true, false))
-  @Field()
+  @Field({nullable: true})
   public get CultureInfo(): string {
     return `${this._langCode.toLowerCase()}-${this._countryCode.toUpperCase()}`
   }
 
-  @Field(type => [Page])
+  @Field(type => [Page], {nullable: true})
   @OneToMany(type => Page, page => page.Culture)
   public get Pages(): Page[] {
     return this._pages
