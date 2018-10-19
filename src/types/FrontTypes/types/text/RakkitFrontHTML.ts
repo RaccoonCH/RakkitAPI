@@ -7,9 +7,9 @@ export default class RakkitFrontHTML implements IRakkitFrontType, IRakkitFrontTe
   IsInHeader: boolean
   IsSearchable: boolean
   PlaceOrder: number
-  Placeholder: string
+  Placeholder?: string
 
-  constructor(placeholder: string, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(placeholder: string = null, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
     this.Placeholder = placeholder
     this.IsEditable = isEditable
     this.IsInHeader = isInHeader

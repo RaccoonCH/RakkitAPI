@@ -9,7 +9,7 @@ export default class RakkitFrontJSON implements IRakkitFrontType, IRakkitFrontTe
   PlaceOrder: number
   Placeholder: string
 
-  constructor(placeholder: string, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(placeholder: string = null, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
     this.Placeholder = placeholder
     this.IsEditable = isEditable
     this.IsInHeader = isInHeader
