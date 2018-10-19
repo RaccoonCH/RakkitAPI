@@ -6,7 +6,7 @@ import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 import Page from '../Page/PageModel';
 
-@Package(new RakkitPackage('Culture package'))
+@Package(new RakkitPackage())
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {

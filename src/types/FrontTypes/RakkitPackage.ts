@@ -6,8 +6,8 @@ export default class RakkitPackage {
   Icon?: string
   Attributes: {} = {}
 
-  constructor(description: string, icon: string = null, requiredRole: 'default' | 'super' = 'default') {
-    this.Description = description
+  constructor(description: string = null, icon: string = null, requiredRole: 'default' | 'super' = 'default') {
+    this.Description = description || 'A Rakkit package'
     this.Icon = icon
     this.RequiredRole = requiredRole
   }

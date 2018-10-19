@@ -5,7 +5,7 @@ import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
 import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 
-@Package(new RakkitPackage('The example Rakkit Package'))
+@Package(new RakkitPackage())
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {
