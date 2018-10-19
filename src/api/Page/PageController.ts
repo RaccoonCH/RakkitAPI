@@ -1,6 +1,6 @@
 import { Query, Resolver, Arg, Args, ArgsType, Field } from 'type-graphql'
 import PageModel from './PageModel'
-import { where, composeQuery } from '../../utils/orm-graphql-helpers'
+import { composeQuery } from '../../utils/orm-graphql-helpers'
 import CultureModel from '../Culture/CultureModel'
 
 @ArgsType()
