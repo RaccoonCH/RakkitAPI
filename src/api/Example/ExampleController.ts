@@ -1,18 +1,22 @@
 import ExampleModel from './ExampleModel'
-import { Query, Resolver, FieldResolver, Root } from 'type-graphql'
+import { Query, Resolver, FieldResolver, Root, Args } from 'type-graphql'
 
 @Resolver(ExampleModel)
 export default class ExampleController {
+  //#region GraphQL
   @Query(returns => [ExampleModel])
   async getAllExample() {
     return ExampleModel.find()
   }
 
+  // The @Root refers to the self element instance
   @FieldResolver()
   nameToUppercase(@Root() exampleInstance: ExampleModel): string {
     return exampleInstance.name.toLocaleUpperCase()
   }
-  
+  //#endregion
+
+  //#region REST
   static async getOne (req, res) {
     res.send(await ExampleModel.findOne(req.params.id))
     // findOne({id: req.params.id}) works too
@@ -47,4 +51,5 @@ export default class ExampleController {
       res.status(404).send('Item not found')
     }
   }
+  //#endregion
 }

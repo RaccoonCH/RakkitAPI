@@ -18,7 +18,7 @@ const args = allArgs.filter(a => a[0] !== '-')
 const injected: Map<string, string> = new Map()
 const RPNameUpperFirstLetter = getUppercaseFirstLetter(args[0])
 const injectVariable: Map<string, Array<Array<string>>> = new Map([
-  // [FILE, [VARIABLE, REPLACE_WITH]]
+  // [FILE, [[VARIABLE, REPLACE_WITH]]]
   ['model', [
     ['model', RPNameUpperFirstLetter]
   ]],
