@@ -5,9 +5,10 @@ import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontS
 import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
 import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
 import Page from '../Page/PageModel'
+import Example from '../Example/ExampleModel';
 
 @Package(new RakkitPackage())
-@InputType('cultureInput')
+@InputType('CultureInput')
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {
@@ -15,6 +16,16 @@ export default class Culture extends BaseEntity {
   private _id: number
   private _langCode: string
   private _countryCode: string
+  private _examples: Example[]
+
+  @Field(type => [Example], {nullable: true})
+  @OneToMany(type => Example, culture => culture.Culture)
+  public get Examples(): Example[] {
+    return this._examples
+  }
+  public set Examples(val: Example[]) {
+    this._examples = val
+  }
 
   @Attribute(new RakkitFrontID())
   @Field(type => ID, {nullable: true})
@@ -53,7 +64,7 @@ export default class Culture extends BaseEntity {
   }
 
   @Field(type => [Page], {nullable: true})
-  @OneToMany(type => Page, page => page.Culture)
+  @OneToMany(type => Page, page => page.Culture, {eager: true})
   public get Pages(): Page[] {
     return this._pages
   }

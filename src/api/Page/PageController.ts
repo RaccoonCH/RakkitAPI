@@ -2,6 +2,7 @@ import { Query, Resolver, Arg, Args, ArgsType, Field } from 'type-graphql'
 import PageModel from './PageModel'
 import { composeQuery } from '../../utils/orm-graphql-helpers'
 import CultureModel from '../Culture/CultureModel'
+import ExampleModel from '../Example/ExampleModel'
 
 @ArgsType()
 abstract class PageArgs {
@@ -16,13 +17,29 @@ abstract class PageArgs {
 
   @Field({nullable: true})
   CultureA: CultureModel
+
+  @Field({nullable: true})
+  ExampleB: ExampleModel
 }
 
 @Resolver(PageModel)
 export default class PageController {
   //#region GraphQL
   @Query(returns => [PageModel])
-  async pages(@Args() { Id, Title, Url, CultureA }: PageArgs) {
+  async pages(@Args() { Id, Title, Url, CultureA, ExampleB }: PageArgs) {
+    console.log(composeQuery(PageModel, {
+      Id,
+      Title,
+      Url,
+      CultureA: {
+        relation: CultureModel.name,
+        value: CultureA
+      },
+      ExampleB: {
+        relation: ExampleModel.name,
+        value: ExampleB
+      }
+    }, {relations: ['Example.Culture']}).getSql())
     return composeQuery(PageModel, {
       Id,
       Title,
@@ -30,8 +47,12 @@ export default class PageController {
       CultureA: {
         relation: CultureModel.name,
         value: CultureA
+      },
+      ExampleB: {
+        relation: ExampleModel.name,
+        value: ExampleB
       }
-    }).getMany()
+    }, {relations: ['Example.Culture']}).getMany()
   }
   //#endregion
 
