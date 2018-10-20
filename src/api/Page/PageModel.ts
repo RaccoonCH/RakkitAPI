@@ -13,32 +13,26 @@ import Example from '../Example/ExampleModel';
 @ObjectType()
 @Entity({name: 'Page'})
 export default class Page extends BaseEntity {
-  private _id: number
   private _title: string
   private _model: string
   private _content: string
-  private _culture: Culture
   private _url: string
-  private _example: Example
-
-  @Attribute(new RakkitFrontShortText())
-  @Field(type => Example, {nullable: true})
-  @ManyToOne(type => Example, example => example.Pages)
-  public get Example(): Example {
-    return this._example
-  }
-  public set Example(val: Example) {
-    this._example = val
-  }
+  private _culture: Promise<Culture>
+  private _example: Promise<Example>
 
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  public get Id(): number {
-    return this._id
+  public readonly Id: number
+
+  @Attribute(new RakkitFrontShortText())
+  @Field(type => Example, {nullable: true})
+  @ManyToOne(type => Example, example => example.Pages)
+  public get Example(): Promise<Example> {
+    return this._example
   }
-  public set Id(val: number) {
-    this._id = val
+  public set Example(val: Promise<Example>) {
+    this._example = val
   }
 
   @Attribute(new RakkitFrontShortText())
@@ -74,10 +68,10 @@ export default class Page extends BaseEntity {
   @Attribute(new RakkitFrontObject('CultureInfo'))
   @Field(type => Culture)
   @ManyToOne(type => Culture, culture => culture.Pages)
-  public get Culture(): Culture {
+  public get Culture(): Promise<Culture> {
     return this._culture
   }
-  public set Culture(val: Culture) {
+  public set Culture(val: Promise<Culture>) {
     this._culture = val
   }
 

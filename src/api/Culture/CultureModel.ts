@@ -12,18 +12,18 @@ import Example from '../Example/ExampleModel';
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {
-  private _pages: Page[]
+  private _pages: Promise<Page[]>
   private _id: number
   private _langCode: string
   private _countryCode: string
-  private _examples: Example[]
+  private _examples: Promise<Example[]>
 
   @Field(type => [Example], {nullable: true})
   @OneToMany(type => Example, culture => culture.Culture)
-  public get Examples(): Example[] {
+  public get Examples(): Promise<Example[]> {
     return this._examples
   }
-  public set Examples(val: Example[]) {
+  public set Examples(val: Promise<Example[]>) {
     this._examples = val
   }
 
@@ -64,11 +64,11 @@ export default class Culture extends BaseEntity {
   }
 
   @Field(type => [Page], {nullable: true})
-  @OneToMany(type => Page, page => page.Culture, {eager: true})
-  public get Pages(): Page[] {
+  @OneToMany(type => Page, page => page.Culture)
+  public get Pages(): Promise<Page[]> {
     return this._pages
   }
-  public set Pages(val: Page[]) {
+  public set Pages(val: Promise<Page[]>) {
     this._pages = val
   }
 }
