@@ -62,7 +62,6 @@ export function composeQuery(
       // Ignore the GraphQL query parameter if the value is not given (= undefined)
       if (value !== undefined) {
         // If the given value is a relation, join the table and add the conditions into the where
-        // Stop set the max depth to 1
         const relationValue = relationArgs.get(prop)
         if (relationValue) {
           parseObjToQuery(value, relationValue)
