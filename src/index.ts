@@ -15,6 +15,7 @@ getConnectionOptions().then(createConnection).catch(console.error)
 
 const host = 'localhost'
 const port = 4000
+const apiUrl = '/api'
 
 const app = express()
 const server = createServer(app)
@@ -27,7 +28,7 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '../public')))
 
 // Load the api returned router into the /api route
-app.use('/api', api.router)
+app.use(apiUrl, api.router)
 
 // Build TypeGraphQL schema to use it
 TypeGraphQL.buildSchema({
@@ -41,6 +42,6 @@ TypeGraphQL.buildSchema({
 // Ignore the host value error
 // @ts-ignore
 server.listen(port, host, () => {
-  console.log(color(`Express: Started on http://${host}:${port}\n`, 'fg.black', 'bg.green'))
+  console.log(color(`Express: Started on http://${host}:${port}${apiUrl}\n`, 'fg.black', 'bg.green'))
 })
 

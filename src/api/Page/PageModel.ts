@@ -17,7 +17,7 @@ export default class Page extends BaseEntity {
   private _model: string
   private _content: string
   private _url: string
-  private _culture: Promise<Culture>
+  private _culture: Culture
   private _example: Promise<Example>
 
   @Attribute(new RakkitFrontID())
@@ -66,12 +66,12 @@ export default class Page extends BaseEntity {
   }
 
   @Attribute(new RakkitFrontObject('CultureInfo'))
-  @Field(type => Culture)
+  @Field(type => Culture, {nullable: true})
   @ManyToOne(type => Culture, culture => culture.Pages)
-  public get Culture(): Promise<Culture> {
+  public get Culture(): Culture {
     return this._culture
   }
-  public set Culture(val: Promise<Culture>) {
+  public set Culture(val: Culture) {
     this._culture = val
   }
 

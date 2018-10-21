@@ -31,15 +31,12 @@ export default class PageController {
       Id,
       Title,
       Url,
-      CultureA: {
-        relation: CultureModel.name,
-        value: CultureA
-      },
-      ExampleB: {
-        relation: ExampleModel.name,
-        value: ExampleB
-      }
+      CultureA,
+      ExampleB
+    }, {
+      relations: [ CultureModel.name ]
     })
+    console.log(query.getSql())
     return query.getMany()
   }
   //#endregion
