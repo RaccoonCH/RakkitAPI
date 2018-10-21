@@ -56,7 +56,7 @@ export function composeQuery(
     })
   }
 
-  const parseObjToQuery = (obj, mainField = queryModelName, stop = false) => {
+  const parseObjToQuery = (obj, mainField = queryModelName) => {
     Object.getOwnPropertyNames(obj).map((prop: string) => {
       const value = obj[prop]
       // Ignore the GraphQL query parameter if the value is not given (= undefined)
@@ -64,8 +64,8 @@ export function composeQuery(
         // If the given value is a relation, join the table and add the conditions into the where
         // Stop set the max depth to 1
         const relationValue = relationArgs.get(prop)
-        if (relationValue && !stop) {
-          parseObjToQuery(value, relationValue, true)
+        if (relationValue) {
+          parseObjToQuery(value, relationValue)
         } else if (!relationValue && typeof value !== 'object') {
           // Add the where condition to the query
           const whereCondition = getConditionString(mainField, prop)
