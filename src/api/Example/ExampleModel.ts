@@ -15,8 +15,8 @@ export default class Example extends BaseEntity {
   private _id: number
   private _name: string
   private _text: string
-  private _pages: Promise<Page[]>
-  private _example: Promise<Culture>
+  private _pages: Page[]
+  private _example: Culture
 
   constructor (name: string, text: string) {
     super()
@@ -26,19 +26,19 @@ export default class Example extends BaseEntity {
 
   @Field(type => Culture, {nullable: true})
   @ManyToOne(type => Culture, culture => culture.Examples)
-  public get Culture(): Promise<Culture> {
+  public get Culture(): Culture {
     return this._example
   }
-  public set Culture(val: Promise<Culture>) {
+  public set Culture(val: Culture) {
     this._example = val
   }
 
   @Field(type => [Page], {nullable: true})
   @OneToMany(type => Page, page => page.Example)
-  public get Pages(): Promise<Page[]> {
+  public get Pages(): Page[] {
     return this._pages
   }
-  public set Pages(val: Promise<Page[]>) {
+  public set Pages(val: Page[]) {
     this._pages = val
   }
 

@@ -1,11 +1,13 @@
-import { Query, Resolver, Arg, Args, ArgsType, Field, UseMiddleware, MiddlewareFn, Ctx } from 'type-graphql'
+import { Query, Resolver, Args, ArgsType, Field, InputType } from 'type-graphql'
 import PageModel from './PageModel'
 import { composeQuery } from '../../utils/orm-graphql-helpers'
 import CultureModel from '../Culture/CultureModel'
 import ExampleModel from '../Example/ExampleModel'
+import RakkitQueryArgs from '../../types/Types/RakkitGraphQL/RakkitQueryArgs'
+import { Request, Response, NextFunction } from 'express';
 
-@ArgsType()
-abstract class PageArgs {
+@InputType()
+class PageArgs {
   @Field({nullable: true})
   Id: number
 
@@ -22,19 +24,28 @@ abstract class PageArgs {
   ExampleB: ExampleModel
 }
 
+@ArgsType()
+class WherePageArgs extends RakkitQueryArgs {
+  @Field(type => PageArgs, { nullable: true })
+  where: PageArgs
+}
+
 @Resolver(PageModel)
 export default class PageController {
   //#region GraphQL
   @Query(returns => [PageModel])
-  async pages(@Args() { Id, Title, Url, CultureA, ExampleB }: PageArgs) {
-    const query = composeQuery(PageModel, {
-      Id,
-      Title,
-      Url,
-      CultureA,
-      ExampleB
-    }, {
-      relations: [ CultureModel.name ]
+  async pages(@Args() { where, skip, limit, first, last, conditionOperator }: WherePageArgs) {
+    const query = composeQuery(PageModel, where, {
+      relations: [{
+        select: true,
+        forArg: 'CultureA',
+        table: CultureModel.name
+      }],
+      skip,
+      limit,
+      first,
+      last,
+      conditionOperator
     })
     console.log(query.getSql())
     return query.getMany()
@@ -42,7 +53,7 @@ export default class PageController {
   //#endregion
 
   //#region REST
-  static async getAll(req, res) {
+  static async getAll(req: Request, res: Response) {
     res.send(await PageModel.find())
   }
   //#endregion

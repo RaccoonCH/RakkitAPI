@@ -18,7 +18,7 @@ export default class Page extends BaseEntity {
   private _content: string
   private _url: string
   private _culture: Culture
-  private _example: Promise<Example>
+  private _example: Example
 
   @Attribute(new RakkitFrontID())
   @Field(type => ID)
@@ -28,10 +28,10 @@ export default class Page extends BaseEntity {
   @Attribute(new RakkitFrontShortText())
   @Field(type => Example, {nullable: true})
   @ManyToOne(type => Example, example => example.Pages)
-  public get Example(): Promise<Example> {
+  public get Example(): Example {
     return this._example
   }
-  public set Example(val: Promise<Example>) {
+  public set Example(val: Example) {
     this._example = val
   }
 

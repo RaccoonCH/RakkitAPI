@@ -1,9 +1,12 @@
+import { RakkitAction } from './../types/Types/RakkitRouter/RakkitRouterTypes'
 import { Router } from 'express'
 import color from '../utils/color'
 import { scanDirSync, fileExistsSync, getFilePath } from '../utils/file'
 import RakkitPackage from './../types/FrontTypes/RakkitPackage'
 import IRakkitType from '../types/FrontTypes/IRakkitFrontType'
-const router = Router()
+import RakkitRoute from '../types/Types/RakkitRouter/RakkitRoute'
+import RakkitRouter from '../types/Types/RakkitRouter/RakkitRouter'
+import RakkitMiddleware from '../types/Types/RakkitRouter/RakkitMiddleware'
 
 //#region RP decorators
 const RPs: RakkitPackage[] = []
@@ -45,8 +48,8 @@ export const Attribute = (type: IRakkitType) => {
 const getRPObjectPath = (rpName: string, objectName: string) => {
   return getFilePath(rpName, rpName + objectName.charAt(0).toLocaleUpperCase() + objectName.slice(1).toLocaleLowerCase())
 }
-
 const resolvers: Function[] = []
+const router = Router()
 
 /**
  * It scan all dir into the API folder (each dir represent a RakkitPackage)
@@ -56,10 +59,10 @@ const resolvers: Function[] = []
  * .../api/Page/myRouteDeclaredIntoTheRouter
  */
 scanDirSync(__dirname, (file: string) => {
-  // Run before api import
   const routerFile = getRPObjectPath(file, 'router')
   const controllerFile = getRPObjectPath(file, 'controller')
-  const middlewareFile = getFilePath(file, 'middleware')
+  const middlewareFile = getRPObjectPath(file, 'middleware')
+
   if (fileExistsSync(__dirname, controllerFile)) {
 
     // If the controller file exists, add the class into resolvers for type-graphql
@@ -67,34 +70,29 @@ scanDirSync(__dirname, (file: string) => {
 
     if (fileExistsSync(__dirname, routerFile)) {
       // Load middlewares if middleware file exists
-      const middlewares = fileExistsSync(__dirname, middlewareFile) && require(middlewareFile).default
+      const middlewares: RakkitMiddleware = fileExistsSync(__dirname, middlewareFile) && require(middlewareFile).default
       
       // Import router config file and create a new Express router to parse the config file into an Express Router
-      const apiRouterConfig = require(routerFile).default
-      const apiRouter = Router()
+      const rakkitRouter: RakkitRouter = require(routerFile).default
+      const expressRouter = Router()
 
       // Load "before" middlewares
-      middlewares.before && middlewares.before.forEach(mw => apiRouter.use(mw))
+      middlewares.Before && middlewares.Before.forEach((rakkitBeforeMiddleware: RakkitAction) => expressRouter.use(rakkitBeforeMiddleware))
 
       // Parsing the Router config file into the Express Router object
       // It's possible to declare routes with an Array or an Object: {method: string, route: string, functions: Function[] | Function}
-      apiRouterConfig.forEach(r => {
-        const list = Array.isArray(r)
-        const method = r[list ? 0 : 'method'].toLowerCase()
-        const route = r[list ? 1 : 'route'] 
-        let functions = r[list ? 2 : 'functions']
-        functions = Array.isArray(functions) ? functions : [functions]
+      rakkitRouter.Routes.forEach((rakkitRouter: RakkitRoute) => {
         // apiRouter.get('/...', () => {...})
-        apiRouter[method](route, ...functions)
+        expressRouter[rakkitRouter.Method](rakkitRouter.Route, ...rakkitRouter.Actions)
       })
 
       // Load "after" middlewares
-      middlewares.after && middlewares.after.forEach(mw => apiRouter.use(mw))
+      middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: RakkitAction) => expressRouter.use(rakkitAfterMiddleware))
 
       // Import API with the right route name .../api/page (for example)
-      router.use(`/${file.toLocaleLowerCase()}`, apiRouter)
+      router.use(`/${rakkitRouter.Name || file.toLocaleLowerCase()}`, expressRouter)
     }
-  
+
     console.log('✅  RP:', color(`${file.toLocaleLowerCase()}`, 'fg.green'))
   } else {
     console.log(`❌  RP: ${file} - ` + color('the controller is required', 'fg.red'))

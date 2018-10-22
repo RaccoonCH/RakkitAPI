@@ -1,13 +1,17 @@
 import { BaseEntity } from 'typeorm'
-import IRakkitRelationQuery from '../types/Types/IRakkitRelationQuery'
+import IRakkitRelationQuery from '../types/Types/RakkitGraphQL/IRakkitRelationQuery'
 
 const queryModelName = 'model'
 
-function getQueryFieldName(fieldName: string, mainField: string = null) {
-  return `${mainField || queryModelName}.${fieldName}`
+function getQueryFieldName(fieldName: string, mainField: string = queryModelName): string {
+  if (mainField) {
+    return `${mainField}.${fieldName}`
+  } else {
+    return fieldName
+  }
 }
 
-function getConditionString (mainField: string, subField: string) {
+function getConditionString (mainField: string, subField: string): string {
   return `${getQueryFieldName(subField, mainField)} = :${subField}`
 }
 
@@ -19,10 +23,33 @@ function getConditionString (mainField: string, subField: string) {
 export function composeQuery(
   model: typeof BaseEntity,
   obj: Object,
-  options: { or?: boolean, relations?: (string | IRakkitRelationQuery)[] } = {}
+  options: {
+    relations?: (string | IRakkitRelationQuery)[],
+    skip?: number,
+    limit?: number
+    last?: number,
+    first?: number,
+    conditionOperator?: 'or' | 'and'
+  } = {}
 ) {
   const queryBuilder = model.createQueryBuilder(queryModelName)
   const relationArgs = new Map()
+
+  if (options.skip && options.limit) {
+    queryBuilder.take(options.limit)
+    queryBuilder.skip(options.skip)
+  }
+
+  options.limit && queryBuilder.limit(options.limit)
+
+  if (options.first) {
+    queryBuilder.take(options.first)
+  }
+  
+  if (options.last) {
+    queryBuilder.orderBy(getQueryFieldName('Id'), 'DESC')
+    queryBuilder.take(options.last)
+  }
 
   if (options.relations) {
     // Add relations to the query
@@ -39,38 +66,44 @@ export function composeQuery(
         relationObj = relation
       }
       if (relationObj.table) {
-        const newAliasName = relationObj.table.split('.').join('_')
+        // Culture.Example => Culture_Example
+        const pathProps = relationObj.table.split('.')
+        const newAliasName = pathProps.join('_')
         if (relationObj.forArg) {
           relationArgs.set(relationObj.forArg, newAliasName)
         }
         try {
           queryBuilder.expressionMap.findAliasByName(newAliasName)
         } catch (err) {
+          const queryFielName = pathProps.length > 1 ? relationObj.table : getQueryFieldName(relationObj.table)
           if (relationObj.select) {
-            queryBuilder.innerJoinAndSelect(getQueryFieldName(relationObj.table), newAliasName)
+            queryBuilder.innerJoinAndSelect(queryFielName, newAliasName)
           } else {
-            queryBuilder.innerJoin(getQueryFieldName(relationObj.table), newAliasName)
+            queryBuilder.innerJoin(queryFielName, newAliasName)
           }
         }
       }
     })
   }
 
-  const parseObjToQuery = (obj, mainField = queryModelName) => {
+  const parseObjToQuery = (obj, mainField = queryModelName, parentProp = null) => {
     Object.getOwnPropertyNames(obj).map((prop: string) => {
       const value = obj[prop]
+      
       // Ignore the GraphQL query parameter if the value is not given (= undefined)
       if (value !== undefined) {
+        const propPath = getQueryFieldName(prop, parentProp)
+
         // If the given value is a relation, join the table and add the conditions into the where
-        const relationValue = relationArgs.get(prop)
+        const relationValue = relationArgs.get(propPath)
         if (relationValue) {
-          parseObjToQuery(value, relationValue)
+          parseObjToQuery(value, relationValue, propPath)
         } else if (!relationValue && typeof value !== 'object') {
           // Add the where condition to the query
           const whereCondition = getConditionString(mainField, prop)
           const whereValueToReplace = { [prop]: value }
           if (queryBuilder.expressionMap.wheres.length > 0) {
-            if (options.or) {
+            if (options.conditionOperator === 'or') {
               queryBuilder.orWhere(whereCondition, whereValueToReplace)
             } else {
               queryBuilder.andWhere(whereCondition, whereValueToReplace)
