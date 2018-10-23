@@ -1,41 +1,18 @@
-import { Query, Resolver, Args, ArgsType, Field, InputType } from 'type-graphql'
+import { Query, Resolver, Args } from 'type-graphql'
 import PageModel from './PageModel'
-import { composeQuery } from '../../utils/orm-graphql-helpers'
+import { OrmInterface } from '../../class/app'
 import CultureModel from '../Culture/CultureModel'
-import ExampleModel from '../Example/ExampleModel'
-import { QueryArgs } from '../../class/app'
+import PageArgs from './PageArgs'
 import { Request, Response } from 'express'
 
-@InputType()
-class PageArgs {
-  @Field({nullable: true})
-  Id: number
-
-  @Field({nullable: true})
-  Title: string
-
-  @Field({nullable: true})
-  Url: string
-
-  // @Field({nullable: true})
-  // CultureA: CultureModel
-
-  // @Field({nullable: true})
-  // ExampleB: ExampleModel
-}
-
-@ArgsType()
-class WherePageArgs extends QueryArgs {
-  @Field(type => PageArgs, { nullable: true })
-  where: PageArgs
-}
+const PageOrmInterface = new OrmInterface(PageModel)
 
 @Resolver(PageModel)
 export default class PageController {
   //#region GraphQL
   @Query(returns => [PageModel])
-  async pages(@Args() { where, skip, limit, first, last, conditionOperator }: WherePageArgs) {
-    const query = composeQuery(PageModel, where, {
+  async pages(@Args() { where, skip, limit, first, last, conditionOperator }: PageArgs) {
+    const Query = PageOrmInterface.ComposeQuery(where, {
       relations: [{
         select: true,
         forArg: 'CultureA',
@@ -47,8 +24,8 @@ export default class PageController {
       last,
       conditionOperator
     })
-    console.log(query.getSql())
-    return query.getMany()
+    console.log(Query.getSql())
+    return Query.getMany()
   }
   //#endregion
 

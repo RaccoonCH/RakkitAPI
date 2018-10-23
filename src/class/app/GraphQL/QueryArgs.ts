@@ -2,20 +2,20 @@ import { ArgsType, Field } from 'type-graphql'
 
 @ArgsType()
 export abstract class QueryArgs {
-  abstract where
+  abstract readonly where
 
   @Field({ nullable: true })
-  skip: number
+  readonly skip: number
 
   @Field({ nullable: true })
-  limit: number
+  readonly limit: number
 
   @Field({ nullable: true })
-  last: number
+  readonly last: number
 
   @Field({ nullable: true })
-  first: number
+  readonly first: number
 
   @Field({ nullable: true })
-  conditionOperator: 'or' | 'and'
+  readonly conditionOperator: 'or' | 'and'
 }

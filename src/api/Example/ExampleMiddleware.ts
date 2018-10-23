@@ -8,5 +8,5 @@ export default new Middleware(
   },
   (req: Request, res: Response) => {
 
-  },
+  }
 )

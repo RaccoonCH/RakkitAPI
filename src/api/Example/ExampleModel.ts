@@ -1,15 +1,15 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
-import { Field, ObjectType, ID } from 'type-graphql'
-import { Attribute, Package } from '..'
+import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Attribute, Package } from '../../decorators'
 import { RPackage, RShorttext, RId } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
 import Culture from '../Culture/CultureModel'
 
 @Package(new RPackage())
+@InputType('ExampleInput')
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {
-  private _id: number
   private _name: string
   private _text: string
   private _pages: Page[]
@@ -20,6 +20,11 @@ export default class Example extends BaseEntity {
     this.Name = name
     this.Text = text
   }
+
+  @Attribute(new RId())
+  @Field(type => ID)
+  @PrimaryGeneratedColumn()
+  public readonly Id: number
 
   @Field(type => Culture, {nullable: true})
   @ManyToOne(type => Culture, culture => culture.Examples)
@@ -37,16 +42,6 @@ export default class Example extends BaseEntity {
   }
   public set Pages(val: Page[]) {
     this._pages = val
-  }
-
-  @Attribute(new RId())
-  @Field(type => ID)
-  @PrimaryGeneratedColumn()
-  public get Id(): number {
-    return this._id
-  }
-  public set Id(val: number) {
-    this._id = val
   }
 
   @Attribute(new RShorttext())
@@ -69,4 +64,3 @@ export default class Example extends BaseEntity {
     this._text = val
   }
 }
- 

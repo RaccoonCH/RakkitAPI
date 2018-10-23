@@ -1,7 +1,8 @@
 export * from './types/Package'
 export * from './types/IType'
-export * from './types/INumber'
-export * from './types/IText'
+
+export * from './types/number/INumber'
+export * from './types/text/IText'
 
 export * from './types/text/Html'
 export * from './types/text/Json'

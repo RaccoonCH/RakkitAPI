@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
 import { ObjectType, Field, ID, InputType } from 'type-graphql'
-import { Package, Attribute } from '..'
+import { Package, Attribute } from '../../decorators'
 import { RPackage, RId, RShorttext, RObject } from '../../class/FrontTypes'
 import Culture from '../Culture/CultureModel'
 import Example from '../Example/ExampleModel'
@@ -82,4 +82,3 @@ export default class Page extends BaseEntity {
     this._url = val
   }
 }
- 

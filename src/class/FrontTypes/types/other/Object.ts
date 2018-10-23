@@ -10,10 +10,10 @@ export class RObject implements IType {
   PropertyToShow: string
 
   constructor(
-    propertyToShow: string, 
-    isInHeader: boolean = false, 
-    isSearchable: boolean = false, 
-    isEditable: boolean = true, 
+    propertyToShow: string,
+    isInHeader: boolean = false,
+    isSearchable: boolean = false,
+    isEditable: boolean = true,
     placeOrder: number = 0
   ) {
     this.PropertyToShow = propertyToShow

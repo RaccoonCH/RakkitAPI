@@ -9,7 +9,7 @@ const textCustom = {
     cyan: 36,
     white: 37
   },
-  
+
   bg: {
     black: 40,
     red: 41,
@@ -20,7 +20,7 @@ const textCustom = {
     cyan: 46,
     white: 47
   },
-  
+
   cmds: {
     reset: 0,
     bright: 1,
@@ -37,7 +37,7 @@ const textCustom = {
  * @param text The text to colorize
  * @param params The color params
  */
-export default (text, ...params: string[]) => {
+export const Color = (text, ...params: string[]): string => {
   let resText = ''
   params.forEach(p => {
     const v = p.split('.')
@@ -47,6 +47,6 @@ export default (text, ...params: string[]) => {
   return resText
 }
 
-function getCode(code) {
-  return '\x1b[' + code + 'm'
+const getCode = (code: number): string => {
+  return `\x1b[${code}m`
 }

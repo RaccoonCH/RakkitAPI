@@ -1,21 +1,22 @@
-import { IType, IText } from '../..'
+import { IType } from '../..'
 
-export class RHtml implements IType, IText {
-  TypeName: string = 'text:html'
+export class RMap implements IType {
+  TypeName: string = 'map'
   IsEditable: boolean
   IsInHeader: boolean
   IsSearchable: boolean
   PlaceOrder: number
-  Placeholder?: string
+  Placeholder: string
+  PropertyToShow: string
 
   constructor(
-    placeholder: string = null,
+    propertyToShow: string,
     isInHeader: boolean = false,
     isSearchable: boolean = false,
     isEditable: boolean = true,
     placeOrder: number = 0
   ) {
-    this.Placeholder = placeholder
+    this.PropertyToShow = propertyToShow
     this.IsEditable = isEditable
     this.IsInHeader = isInHeader
     this.IsSearchable = isSearchable

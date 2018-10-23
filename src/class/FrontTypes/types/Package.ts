@@ -1,5 +1,5 @@
 export class RPackage {
-  ID: string
+  Id: string
   Name: string
   Description: string
   RequiredRole: 'default' | 'super'

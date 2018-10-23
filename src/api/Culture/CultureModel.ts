@@ -1,66 +1,66 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { ObjectType, Field, ID } from 'type-graphql'
-import { Package, Attribute } from '..'
+import { ObjectType, Field, ID, InputType } from 'type-graphql'
+import { Package, Attribute } from '../../decorators'
 import  { RPackage, RId, RShorttext } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
 import Example from '../Example/ExampleModel'
 
 @Package(new RPackage())
+@InputType('CultureInput')
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {
-  private _pages: Page[]
-  private _langCode: string
-  private _countryCode: string
-  private _examples: Example[]
+  private pages: Page[]
+  private langCode: string
+  private countryCode: string
+  private examples: Example[]
 
   @Attribute(new RId())
-  @Field(type => ID)
+  @Field(type => ID, { nullable: true })
   @PrimaryGeneratedColumn()
   public readonly Id: number
 
   @Attribute(new RShorttext())
-  @Field()
+  @Field({ nullable: true })
   @Column()
   public get LangCode(): string {
-    return this._langCode
+    return this.langCode
   }
   public set LangCode(val: string) {
-    this._langCode = val
+    this.langCode = val
   }
 
   @Attribute(new RShorttext())
-  @Field()
+  @Field({ nullable: true })
   @Column()
   public get CountryCode(): string {
-    return this._countryCode
+    return this.countryCode
   }
   public set CountryCode(val: string) {
-    this._countryCode = val
+    this.countryCode = val
   }
 
   @Attribute(new RShorttext(null, true, true, false))
-  @Field()
+  @Field({ nullable: true })
   public get CultureInfo(): string {
-    return `${this._langCode.toLowerCase()}-${this._countryCode.toUpperCase()}`
+    return `${this.langCode.toLowerCase()}-${this.countryCode.toUpperCase()}`
   }
 
-  @Field(type => [Page])
+  @Field(type => [Page], { nullable: true })
   @OneToMany(type => Page, page => page.Culture)
   public get Pages(): Page[] {
-    return this._pages
+    return this.pages
   }
   public set Pages(val: Page[]) {
-    this._pages = val
+    this.pages = val
   }
 
-  @Field(type => [Example])
+  @Field(type => [Example], { nullable: true })
   @OneToMany(type => Example, culture => culture.Culture)
   public get Examples(): Example[] {
-    return this._examples
+    return this.examples
   }
   public set Examples(val: Example[]) {
-    this._examples = val
+    this.examples = val
   }
 }
- 
