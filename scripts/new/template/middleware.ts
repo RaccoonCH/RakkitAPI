@@ -1,4 +1,4 @@
-import { Middleware } from '../../class/app'
+import { Middleware } from '../../class/App'
 import { Request, Response, NextFunction } from 'express'
 
 export default new Middleware(

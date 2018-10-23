@@ -1,5 +1,5 @@
 import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs } from '../../class/app'
+import { QueryArgs } from '../../class/App'
 import PageModel from './PageModel'
 
 @InputType()

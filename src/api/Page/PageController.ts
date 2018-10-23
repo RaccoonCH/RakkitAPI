@@ -1,6 +1,6 @@
 import { Query, Resolver, Args } from 'type-graphql'
 import PageModel from './PageModel'
-import { OrmInterface } from '../../class/app'
+import { OrmInterface } from '../../class/App'
 import CultureModel from '../Culture/CultureModel'
 import PageArgs from './PageArgs'
 import { Request, Response } from 'express'

@@ -7,4 +7,4 @@ export * from './Routing/Router'
 export * from './Routing/Route'
 export * from './Routing/RouterTypes'
 
-export * from './App/AppLoader'
+export * from './Core/AppLoader'

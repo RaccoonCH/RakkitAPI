@@ -8,7 +8,7 @@ import { getConnectionOptions, createConnection } from 'typeorm'
 import { createServer } from 'http'
 import { Color } from './utils'
 import { ApolloServer } from 'apollo-server-express'
-import { AppLoader } from './class/app'
+import { AppLoader } from './class/App'
 import { RPackage, IType } from './class/FrontTypes'
 
 // All RakkitPackages informations are stored in the RPs variable
