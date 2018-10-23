@@ -8,3 +8,4 @@ export * from './Routing/Route'
 export * from './Routing/RouterTypes'
 
 export * from './Core/AppLoader'
+export * from './Core/FileUtils'

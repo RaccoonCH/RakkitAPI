@@ -1,7 +1,7 @@
 import * as Fs from 'fs'
 import * as Path from 'path'
 
-export class FileUtil {
+export class FileUtils {
   private rootPath: string
 
   public get RootPath(): string {

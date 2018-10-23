@@ -1,13 +1,13 @@
 import { Router as ExpressRouter } from 'express'
-import { Color, FileUtil } from '../../../utils'
-import { Middleware, Router, Route, Action } from '..'
+import { Color } from '../../../misc'
+import { Middleware, Router, Route, Action, FileUtils } from '..'
 import * as path from 'path'
 
 export class AppLoader {
   private _apiPath: string
   private _filesExtenstion: string = 'ts'
   private _resolvers: Function[] = []
-  private _appFileUtil: FileUtil
+  private _appFileUtil: FileUtils
   private _expressRouter: ExpressRouter = ExpressRouter()
 
   public get ApiPath(): string {
@@ -26,7 +26,7 @@ export class AppLoader {
     return this._expressRouter
   }
 
-  private get AppFileUtil(): FileUtil {
+  private get AppFileUtil(): FileUtils {
     return this._appFileUtil
   }
 
@@ -38,7 +38,7 @@ export class AppLoader {
     if (filesExtension) {
       this._filesExtenstion = filesExtension
     }
-    this._appFileUtil = new FileUtil(apiPath || 'api')
+    this._appFileUtil = new FileUtils(apiPath || 'api')
   }
 
   /**
