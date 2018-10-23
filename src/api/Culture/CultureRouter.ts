@@ -1,7 +1,6 @@
 import CultureController from './CultureController'
-import RakkitRouter from '../../types/Types/RakkitRouter/RakkitRouter'
-import RakkitRoute from '../../types/Types/RakkitRouter/RakkitRoute'
+import { Router, Route } from '../../class/app'
 
-export default new RakkitRouter([
-  new RakkitRoute('get', '/', CultureController.getAll)
+export default new Router([
+  new Route('get', '/', CultureController.getAll)
 ])

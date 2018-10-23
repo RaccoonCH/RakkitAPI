@@ -1,15 +1,11 @@
-import { RakkitAction } from './../types/Types/RakkitRouter/RakkitRouterTypes'
-import { Router } from 'express'
+import { Router as ExpressRouter, Request, Response } from 'express'
 import color from '../utils/color'
 import { scanDirSync, fileExistsSync, getFilePath } from '../utils/file'
-import RakkitPackage from './../types/FrontTypes/RakkitPackage'
-import IRakkitType from '../types/FrontTypes/IRakkitFrontType'
-import RakkitRoute from '../types/Types/RakkitRouter/RakkitRoute'
-import RakkitRouter from '../types/Types/RakkitRouter/RakkitRouter'
-import RakkitMiddleware from '../types/Types/RakkitRouter/RakkitMiddleware'
+import { RPackage, IType } from './../class/FrontTypes'
+import { Middleware, Router, Route, Action } from '../class/app'
 
 //#region RP decorators
-const RPs: RakkitPackage[] = []
+const RPs: RPackage[] = []
 let RPsAttributes: Object = {}
 
 /**
@@ -17,8 +13,8 @@ let RPsAttributes: Object = {}
  * It always called after Attribute decorator
  * @param rakkitPackage The RakkitPackage object with informations (description, icon, ...)
  */
-export const Package = (rakkitPackage: RakkitPackage) => {
-  return (target: Function) => {
+export const Package = (rakkitPackage: RPackage): Function => {
+  return (target: Function): void => {
     const className = target.name.toLowerCase()
     RPs.push({
       ID: className,
@@ -34,8 +30,8 @@ export const Package = (rakkitPackage: RakkitPackage) => {
  * It always called before Package decorator
  * @param type The front-end type, it describe how the datas will be displayed
  */
-export const Attribute = (type: IRakkitType) => {
-  return (target: Object, key: string) => {
+export const Attribute = (type: IType): Function => {
+  return (target: Object, key: string): void => {
     const className = target.constructor.name.toLowerCase()
     if (!RPsAttributes[className]) {
       RPsAttributes[className] = {}
@@ -45,11 +41,11 @@ export const Attribute = (type: IRakkitType) => {
 }
 //#endregion
 
-const getRPObjectPath = (rpName: string, objectName: string) => {
+const getRPObjectPath = (rpName: string, objectName: string): string => {
   return getFilePath(rpName, rpName + objectName.charAt(0).toLocaleUpperCase() + objectName.slice(1).toLocaleLowerCase())
 }
 const resolvers: Function[] = []
-const router = Router()
+const router = ExpressRouter()
 
 /**
  * It scan all dir into the API folder (each dir represent a RakkitPackage)
@@ -70,24 +66,24 @@ scanDirSync(__dirname, (file: string) => {
 
     if (fileExistsSync(__dirname, routerFile)) {
       // Load middlewares if middleware file exists
-      const middlewares: RakkitMiddleware = fileExistsSync(__dirname, middlewareFile) && require(middlewareFile).default
+      const middlewares: Middleware = fileExistsSync(__dirname, middlewareFile) && require(middlewareFile).default
       
       // Import router config file and create a new Express router to parse the config file into an Express Router
-      const rakkitRouter: RakkitRouter = require(routerFile).default
-      const expressRouter = Router()
+      const rakkitRouter: Router = require(routerFile).default
+      const expressRouter = ExpressRouter()
 
       // Load "before" middlewares
-      middlewares.Before && middlewares.Before.forEach((rakkitBeforeMiddleware: RakkitAction) => expressRouter.use(rakkitBeforeMiddleware))
+      middlewares.Before && middlewares.Before.forEach((rakkitBeforeMiddleware: Action) => expressRouter.use(rakkitBeforeMiddleware))
 
       // Parsing the Router config file into the Express Router object
       // It's possible to declare routes with an Array or an Object: {method: string, route: string, functions: Function[] | Function}
-      rakkitRouter.Routes.forEach((rakkitRouter: RakkitRoute) => {
+      rakkitRouter.Routes.forEach((rakkitRouter: Route) => {
         // apiRouter.get('/...', () => {...})
         expressRouter[rakkitRouter.Method](rakkitRouter.Route, ...rakkitRouter.Actions)
       })
 
       // Load "after" middlewares
-      middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: RakkitAction) => expressRouter.use(rakkitAfterMiddleware))
+      middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: Action) => expressRouter.use(rakkitAfterMiddleware))
 
       // Import API with the right route name .../api/page (for example)
       router.use(`/${rakkitRouter.Name || file.toLocaleLowerCase()}`, expressRouter)
@@ -100,6 +96,6 @@ scanDirSync(__dirname, (file: string) => {
 })
 
 // Get all RakkitPackage objects
-router.get('/', (req, res) => res.send(RPs))
+router.get('/', (req: Request, res: Response) => res.send(RPs))
 
 export default { router, resolvers }

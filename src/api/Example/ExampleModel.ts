@@ -1,14 +1,11 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
-import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Field, ObjectType, ID } from 'type-graphql'
 import { Attribute, Package } from '..'
-import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
-import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
-import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
+import { RPackage, RShorttext, RId } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
-import Culture from '../Culture/CultureModel';
+import Culture from '../Culture/CultureModel'
 
-@Package(new RakkitPackage())
-@InputType('ExampleInput')
+@Package(new RPackage())
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {
@@ -42,8 +39,8 @@ export default class Example extends BaseEntity {
     this._pages = val
   }
 
-  @Attribute(new RakkitFrontID())
-  @Field(type => ID, {nullable: true})
+  @Attribute(new RId())
+  @Field(type => ID)
   @PrimaryGeneratedColumn()
   public get Id(): number {
     return this._id
@@ -52,8 +49,8 @@ export default class Example extends BaseEntity {
     this._id = val
   }
 
-  @Attribute(new RakkitFrontShortText())
-  @Field({nullable: true})
+  @Attribute(new RShorttext())
+  @Field()
   @Column()
   public get Name(): string {
     return this._name
@@ -62,8 +59,8 @@ export default class Example extends BaseEntity {
     this._name = val
   }
 
-  @Attribute(new RakkitFrontShortText())
-  @Field({nullable: true})
+  @Attribute(new RShorttext())
+  @Field()
   @Column()
   public get Text(): string {
     return this._text

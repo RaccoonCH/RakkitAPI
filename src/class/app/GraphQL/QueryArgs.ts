@@ -1,7 +1,7 @@
 import { ArgsType, Field } from 'type-graphql'
 
 @ArgsType()
-export default abstract class RakkitQueryArgs {
+export abstract class QueryArgs {
   abstract where
 
   @Field({ nullable: true })

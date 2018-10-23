@@ -1,6 +1,6 @@
-import IRakkitFrontType from '../../IRakkitFrontType'
+import { IType } from '../..'
 
-export default class RakkitFrontObject implements IRakkitFrontType {
+export class RObject implements IType {
   TypeName: string = 'object'
   IsEditable: boolean
   IsInHeader: boolean
@@ -9,7 +9,13 @@ export default class RakkitFrontObject implements IRakkitFrontType {
   Placeholder: string
   PropertyToShow: string
 
-  constructor(propertyToShow: string, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(
+    propertyToShow: string, 
+    isInHeader: boolean = false, 
+    isSearchable: boolean = false, 
+    isEditable: boolean = true, 
+    placeOrder: number = 0
+  ) {
     this.PropertyToShow = propertyToShow
     this.IsEditable = isEditable
     this.IsInHeader = isInHeader

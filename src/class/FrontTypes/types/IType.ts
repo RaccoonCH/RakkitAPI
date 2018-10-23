@@ -1,4 +1,4 @@
-export default interface IRakkitFrontType {
+export interface IType {
   IsEditable: boolean
   TypeName: string
   IsInHeader: boolean

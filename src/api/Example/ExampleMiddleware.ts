@@ -1,7 +1,7 @@
-import RakkitMiddleware from '../../types/Types/RakkitRouter/RakkitMiddleware'
+import { Middleware } from '../../class/app'
 import { Request, Response, NextFunction } from 'express'
 
-export default new RakkitMiddleware(
+export default new Middleware(
   (req: Request, res: Response, next: NextFunction) => {
     console.log('Route called in Example RP')
     next()

@@ -1,7 +1,6 @@
-import IRakkitFrontType from '../../IRakkitFrontType'
-import IRakkitFrontNumber from '../../IRakkitFrontNumber'
+import  { IType, INumber } from '../../'
 
-export default class RakkitFrontObject implements IRakkitFrontType, IRakkitFrontNumber {
+export class RInteger implements IType, INumber {
   TypeName: string = 'number:int'
   IsEditable: boolean
   IsInHeader: boolean
@@ -12,7 +11,14 @@ export default class RakkitFrontObject implements IRakkitFrontType, IRakkitFront
   Min?: number
   Max?: number
 
-  constructor(min: number = null, max: number = null, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(
+    min: number = null,
+    max: number = null,
+    isInHeader: boolean = false,
+    isSearchable: boolean = false,
+    isEditable: boolean = true,
+    placeOrder: number = 0
+  ) {
     this.Min = min
     this.Max = max
     this.IsEditable = isEditable

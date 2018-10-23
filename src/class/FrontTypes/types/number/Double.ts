@@ -1,7 +1,6 @@
-import IRakkitFrontType from '../../IRakkitFrontType'
-import IRakkitFrontNumber from '../../IRakkitFrontNumber'
+import  { IType, INumber } from '../../'
 
-export default class RakkitFrontObject implements IRakkitFrontType, IRakkitFrontNumber {
+export class RDouble implements IType, INumber {
   TypeName: string = 'number:double'
   IsEditable: boolean
   IsInHeader: boolean
@@ -13,7 +12,15 @@ export default class RakkitFrontObject implements IRakkitFrontType, IRakkitFront
   Min?: number
   Max?: number
 
-  constructor(precision: number = 3, min: number = null, max: number = null, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(
+    precision: number = 3,
+    min: number = null,
+    max: number = null,
+    isInHeader: boolean = false,
+    isSearchable: boolean = false,
+    isEditable: boolean = true,
+    placeOrder: number = 0
+  ) {
     this.Precision = precision
     this.Min = min
     this.Max = max

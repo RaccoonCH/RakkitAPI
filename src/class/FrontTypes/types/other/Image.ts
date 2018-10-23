@@ -1,6 +1,6 @@
-import IRakkitFrontType from '../../IRakkitFrontType'
+import { IType } from '../..'
 
-export default class RakkitFrontObject implements IRakkitFrontType {
+export class RImage implements IType {
   TypeName: string = 'object'
   IsEditable: boolean
   IsInHeader: boolean
@@ -11,7 +11,15 @@ export default class RakkitFrontObject implements IRakkitFrontType {
   MaxSize: number
   AcceptedMIME: string[]
 
-  constructor(acceptedMIME: string[], sizeUnit: string, maxSize: number, isInHeader: boolean = false, isSearchable: boolean = false, isEditable: boolean = true, placeOrder: number = 0) {
+  constructor(
+    acceptedMIME: string[],
+    sizeUnit: string,
+    maxSize: number,
+    isInHeader: boolean = false,
+    isSearchable: boolean = false,
+    isEditable: boolean = true,
+    placeOrder: number = 0
+  ) {
     this.AcceptedMIME = acceptedMIME
     this.SizeUnit = sizeUnit
     this.MaxSize = maxSize

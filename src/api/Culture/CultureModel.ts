@@ -1,44 +1,26 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { ObjectType, Field, ID, InputType } from 'type-graphql'
+import { ObjectType, Field, ID } from 'type-graphql'
 import { Package, Attribute } from '..'
-import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
-import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
-import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
+import  { RPackage, RId, RShorttext } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
-import Example from '../Example/ExampleModel';
+import Example from '../Example/ExampleModel'
 
-@Package(new RakkitPackage())
-@InputType('CultureInput')
+@Package(new RPackage())
 @ObjectType()
 @Entity({name: 'Culture'})
 export default class Culture extends BaseEntity {
   private _pages: Page[]
-  private _id: number
   private _langCode: string
   private _countryCode: string
   private _examples: Example[]
 
-  @Field(type => [Example], {nullable: true})
-  @OneToMany(type => Example, culture => culture.Culture)
-  public get Examples(): Example[] {
-    return this._examples
-  }
-  public set Examples(val: Example[]) {
-    this._examples = val
-  }
-
-  @Attribute(new RakkitFrontID())
-  @Field(type => ID, {nullable: true})
+  @Attribute(new RId())
+  @Field(type => ID)
   @PrimaryGeneratedColumn()
-  public get Id(): number {
-    return this._id
-  }
-  public set Id(val: number) {
-    this._id = val
-  }
+  public readonly Id: number
 
-  @Attribute(new RakkitFrontShortText())
-  @Field({nullable: true})
+  @Attribute(new RShorttext())
+  @Field()
   @Column()
   public get LangCode(): string {
     return this._langCode
@@ -47,8 +29,8 @@ export default class Culture extends BaseEntity {
     this._langCode = val
   }
 
-  @Attribute(new RakkitFrontShortText())
-  @Field({nullable: true})
+  @Attribute(new RShorttext())
+  @Field()
   @Column()
   public get CountryCode(): string {
     return this._countryCode
@@ -57,19 +39,28 @@ export default class Culture extends BaseEntity {
     this._countryCode = val
   }
 
-  @Attribute(new RakkitFrontShortText(null, true, true, false))
-  @Field({nullable: true})
+  @Attribute(new RShorttext(null, true, true, false))
+  @Field()
   public get CultureInfo(): string {
     return `${this._langCode.toLowerCase()}-${this._countryCode.toUpperCase()}`
   }
 
-  @Field(type => [Page], {nullable: true})
+  @Field(type => [Page])
   @OneToMany(type => Page, page => page.Culture)
   public get Pages(): Page[] {
     return this._pages
   }
   public set Pages(val: Page[]) {
     this._pages = val
+  }
+
+  @Field(type => [Example])
+  @OneToMany(type => Example, culture => culture.Culture)
+  public get Examples(): Example[] {
+    return this._examples
+  }
+  public set Examples(val: Example[]) {
+    this._examples = val
   }
 }
  

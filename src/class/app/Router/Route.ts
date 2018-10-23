@@ -1,11 +1,11 @@
-import { RakkitAction } from './RakkitRouterTypes'
+import { Action } from './RouterTypes'
 
 type AcceptedMethods = 'get' | 'post' | 'put' | 'delete'
 
-export default class RakkitRoute {
+export class Route {
   private _method: AcceptedMethods
   private _route: string
-  private _actions: RakkitAction[]
+  private _actions: Action[]
 
   public get Method(): AcceptedMethods {
     return this._method
@@ -21,16 +21,16 @@ export default class RakkitRoute {
     this._route = val
   }
 
-  public get Actions(): RakkitAction[] {
+  public get Actions(): Action[] {
     return this._actions
   }
-  public set Actions(val: RakkitAction[]) {
+  public set Actions(val: Action[]) {
     this._actions = val
   }
 
-  constructor(method: AcceptedMethods, route: string, action: RakkitAction)
-  constructor(method: AcceptedMethods, route: string, actions: RakkitAction[])
-  constructor(method: AcceptedMethods, route: string, actions: RakkitAction[] | RakkitAction) {
+  constructor(method: AcceptedMethods, route: string, action: Action)
+  constructor(method: AcceptedMethods, route: string, actions: Action[])
+  constructor(method: AcceptedMethods, route: string, actions: Action[] | Action) {
     this.Method = method
     this.Route = route
     this.Actions = Array.isArray(actions) ? actions : [actions]

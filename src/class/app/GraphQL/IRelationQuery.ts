@@ -1,4 +1,4 @@
-export default interface IRakkitRelationQuery {
+export interface IRelationQuery {
   select: boolean
   table: string
   forArg: string

@@ -3,8 +3,8 @@ import PageModel from './PageModel'
 import { composeQuery } from '../../utils/orm-graphql-helpers'
 import CultureModel from '../Culture/CultureModel'
 import ExampleModel from '../Example/ExampleModel'
-import RakkitQueryArgs from '../../types/Types/RakkitGraphQL/RakkitQueryArgs'
-import { Request, Response, NextFunction } from 'express';
+import { QueryArgs } from '../../class/app'
+import { Request, Response } from 'express'
 
 @InputType()
 class PageArgs {
@@ -17,15 +17,15 @@ class PageArgs {
   @Field({nullable: true})
   Url: string
 
-  @Field({nullable: true})
-  CultureA: CultureModel
+  // @Field({nullable: true})
+  // CultureA: CultureModel
 
-  @Field({nullable: true})
-  ExampleB: ExampleModel
+  // @Field({nullable: true})
+  // ExampleB: ExampleModel
 }
 
 @ArgsType()
-class WherePageArgs extends RakkitQueryArgs {
+class WherePageArgs extends QueryArgs {
   @Field(type => PageArgs, { nullable: true })
   where: PageArgs
 }

@@ -1,11 +1,10 @@
 import ExampleController from './ExampleController'
-import RakkitRouter from '../../types/Types/RakkitRouter/RakkitRouter'
-import RakkitRoute from '../../types/Types/RakkitRouter/RakkitRoute'
+import { Router, Route } from '../../class/app'
 
-export default new RakkitRouter([
-  new RakkitRoute('get', '/', ExampleController.getAll),
-  new RakkitRoute('get', '/:id', ExampleController.getOne),
-  new RakkitRoute('post', '/', ExampleController.create),
-  new RakkitRoute('put', '/:id', ExampleController.update),
-  new RakkitRoute('delete', '/:id', ExampleController.remove)
+export default new Router([
+  new Route('get', '/', ExampleController.getAll),
+  new Route('get', '/:id', ExampleController.getOne),
+  new Route('post', '/', ExampleController.create),
+  new Route('put', '/:id', ExampleController.update),
+  new Route('delete', '/:id', ExampleController.remove)
 ])

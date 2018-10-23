@@ -1,7 +1,6 @@
 import PageController from './PageController'
-import RakkitRouter from '../../types/Types/RakkitRouter/RakkitRouter'
-import RakkitRoute from '../../types/Types/RakkitRouter/RakkitRoute'
+import { Route, Router } from '../../class/app'
 
-export default new RakkitRouter([
-  new RakkitRoute('get', '/', PageController.getAll)
+export default new Router([
+  new Route('get', '/', PageController.getAll)
 ])

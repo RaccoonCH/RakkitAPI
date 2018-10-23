@@ -1,4 +1,4 @@
-import { Query, Resolver, FieldResolver, Root } from 'type-graphql'
+import { Query, Resolver } from 'type-graphql'
 import CultureModel from './CultureModel'
 
 @Resolver(CultureModel)
