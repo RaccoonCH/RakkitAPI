@@ -76,23 +76,23 @@ export class AppLoader {
 
           // Import router config file and create a new Express router to parse the config file into an Express Router
           const rakkitRouter: Router = require(routerFile).default
-          const ApiRouter = ExpressRouter()
+          const apiRouter = ExpressRouter()
 
           // Load "before" middlewares
-          middlewares.Before && middlewares.Before.forEach((rakkitBeforeMiddleware: Action) => ApiRouter.use(rakkitBeforeMiddleware))
+          middlewares.Before && middlewares.Before.forEach((rakkitBeforeMiddleware: Action) => apiRouter.use(rakkitBeforeMiddleware))
 
           // Parsing the Router config file into the Express Router object
           // It's possible to declare routes with an Array or an Object: {method: string, route: string, functions: Function[] | Function}
           rakkitRouter.Routes.forEach((rakkitRouter: Route) => {
             // apiRouter.get('/...', () => {...})
-            ApiRouter[rakkitRouter.Method](rakkitRouter.Route, ...rakkitRouter.Actions)
+            apiRouter[rakkitRouter.Method](rakkitRouter.Route, ...rakkitRouter.Actions)
           })
 
           // Load "after" middlewares
-          middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: Action) => ApiRouter.use(rakkitAfterMiddleware))
+          middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: Action) => apiRouter.use(rakkitAfterMiddleware))
 
           // Import API with the right route name .../api/page (for example)
-          this.ExpressRouter.use(`/${rakkitRouter.Name || file.toLocaleLowerCase()}`, ApiRouter)
+          this.ExpressRouter.use(`/${rakkitRouter.Name || file.toLocaleLowerCase()}`, apiRouter)
         }
 
         console.log('✅  RP:', Color(`${file.toLocaleLowerCase()}`, 'fg.green'))

@@ -12,7 +12,7 @@ export default class PageController {
   //#region GraphQL
   @Query(returns => [PageModel])
   async pages(@Args() { where, skip, limit, first, last, conditionOperator }: PageArgs) {
-    const Query = PageOrmInterface.ComposeQuery(where, {
+    const query = PageOrmInterface.ComposeQuery(where, {
       relations: [{
         select: true,
         forArg: 'CultureA',
@@ -24,8 +24,8 @@ export default class PageController {
       last,
       conditionOperator
     })
-    console.log(Query.getSql())
-    return Query.getMany()
+    console.log(query.getSql())
+    return query.getMany()
   }
   //#endregion
 

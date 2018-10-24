@@ -1,7 +1,7 @@
 import { BaseEntity } from 'typeorm'
 import { IRelationQuery } from '..'
 
-const QueryModelName = 'model'
+const queryModelName = 'model'
 type ComposeQueryOptions = {
   relations?: (string | IRelationQuery)[],
   skip?: number,
@@ -25,7 +25,7 @@ export class OrmInterface {
     this.Model = model
   }
 
-  private getQueryFieldName(fieldName: string, mainField: string = QueryModelName): string {
+  private getQueryFieldName(fieldName: string, mainField: string = queryModelName): string {
     if (mainField) {
       return `${mainField}.${fieldName}`
     } else {
@@ -45,23 +45,23 @@ export class OrmInterface {
   ComposeQuery(options: ComposeQueryOptions)
   ComposeQuery(where: Object, options?: ComposeQueryOptions)
   ComposeQuery(where: Object | undefined, options: ComposeQueryOptions = {}) {
-    const QueryBuilder = this.Model.createQueryBuilder(QueryModelName)
-    const RelationArgs = new Map()
+    const queryBuilder = this.Model.createQueryBuilder(queryModelName)
+    const relationArgs = new Map()
 
     if (options.skip && options.limit) {
-      QueryBuilder.take(options.limit)
-      QueryBuilder.skip(options.skip)
+      queryBuilder.take(options.limit)
+      queryBuilder.skip(options.skip)
     }
 
-    options.limit && QueryBuilder.limit(options.limit)
+    options.limit && queryBuilder.limit(options.limit)
 
     if (options.first) {
-      QueryBuilder.take(options.first)
+      queryBuilder.take(options.first)
     }
 
     if (options.last) {
-      QueryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
-      QueryBuilder.take(options.last)
+      queryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
+      queryBuilder.take(options.last)
     }
 
     if (options.relations) {
@@ -80,49 +80,49 @@ export class OrmInterface {
         }
         if (relationObj.table) {
           // Culture.Example => Culture_Example
-          const PathProps = relationObj.table.split('.')
-          const NewAliasName = PathProps.join('_')
+          const pathProps = relationObj.table.split('.')
+          const newAliasName = pathProps.join('_')
           if (relationObj.forArg) {
-            RelationArgs.set(relationObj.forArg, NewAliasName)
+            relationArgs.set(relationObj.forArg, newAliasName)
           }
           try {
-            QueryBuilder.expressionMap.findAliasByName(NewAliasName)
+            queryBuilder.expressionMap.findAliasByName(newAliasName)
           } catch (err) {
-            const QueryFielName = PathProps.length > 1 ? relationObj.table : this.getQueryFieldName(relationObj.table)
+            const queryFielName = pathProps.length > 1 ? relationObj.table : this.getQueryFieldName(relationObj.table)
             if (relationObj.select) {
-              QueryBuilder.innerJoinAndSelect(QueryFielName, NewAliasName)
+              queryBuilder.innerJoinAndSelect(queryFielName, newAliasName)
             } else {
-              QueryBuilder.innerJoin(QueryFielName, NewAliasName)
+              queryBuilder.innerJoin(queryFielName, newAliasName)
             }
           }
         }
       })
     }
 
-    const parseObjToQuery = (obj: Object, mainField: string = QueryModelName, parentProp: string = null) => {
+    const parseObjToQuery = (obj: Object, mainField: string = queryModelName, parentProp: string = null) => {
       Object.getOwnPropertyNames(obj).map((prop: string) => {
-        const Value = obj[prop]
+        const value = obj[prop]
 
         // Ignore the GraphQL query parameter if the value is not given (= undefined)
-        if (Value !== undefined) {
+        if (value !== undefined) {
           const propPath = this.getQueryFieldName(prop, parentProp)
 
           // If the given value is a relation, join the table and add the conditions into the where
-          const RelationValue = RelationArgs.get(propPath)
-          if (RelationValue) {
-            parseObjToQuery(Value, RelationValue, propPath)
-          } else if (!RelationValue && typeof Value !== 'object') {
+          const relationValue = relationArgs.get(propPath)
+          if (relationValue) {
+            parseObjToQuery(value, relationValue, propPath)
+          } else if (!relationValue && typeof value !== 'object') {
             // Add the where condition to the query
-            const WhereCondition = this.getConditionString(mainField, prop)
-            const WhereValueToReplace = { [prop]: Value }
-            if (QueryBuilder.expressionMap.wheres.length > 0) {
+            const whereCondition = this.getConditionString(mainField, prop)
+            const whereValueToReplace = { [prop]: value }
+            if (queryBuilder.expressionMap.wheres.length > 0) {
               if (options.conditionOperator === 'or') {
-                QueryBuilder.orWhere(WhereCondition, WhereValueToReplace)
+                queryBuilder.orWhere(whereCondition, whereValueToReplace)
               } else {
-                QueryBuilder.andWhere(WhereCondition, WhereValueToReplace)
+                queryBuilder.andWhere(whereCondition, whereValueToReplace)
               }
             } else {
-              QueryBuilder.where(WhereCondition, WhereValueToReplace)
+              queryBuilder.where(whereCondition, whereValueToReplace)
             }
           }
         }
@@ -132,6 +132,6 @@ export class OrmInterface {
       parseObjToQuery(where)
     }
 
-    return QueryBuilder
+    return queryBuilder
   }
 }
