@@ -11,7 +11,7 @@ export default class ExampleController {
 
   // The @Root refers to the self element instance
   @FieldResolver()
-  nameToUppercase(@Root() exampleInstance: ExampleModel): string {
+  nameToUppercase2(@Root() exampleInstance: ExampleModel): string {
     return exampleInstance.Name.toLocaleUpperCase()
   }
   //#endregion

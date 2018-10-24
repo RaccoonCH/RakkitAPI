@@ -5,7 +5,7 @@ import CultureModel from './CultureModel'
 export default class CultureController {
   //#region GraphQL
   @Query(returns => [CultureModel])
-  getAllCulture() {
+  cultures() {
     return CultureModel.find({relations: ['Pages']})
   }
   //#endregion

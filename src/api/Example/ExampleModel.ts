@@ -1,15 +1,14 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
-import { Field, ObjectType, ID } from 'type-graphql'
-import { Attribute, Package } from '..'
-import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
-import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
-import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
+import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Attribute, Package } from '../../decorators'
+import { RPackage, RShorttext, RId } from '../../class/FrontTypes'
+import Page from '../Page/PageModel'
+import Culture from '../Culture/CultureModel'
 
-@Package(new RakkitPackage('The example Rakkit Package'))
+@Package(new RPackage())
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {
-  private _id: number
   private _name: string
   private _text: string
 
@@ -19,17 +18,12 @@ export default class Example extends BaseEntity {
     this.Text = text
   }
 
-  @Attribute(new RakkitFrontID())
+  @Attribute(new RId())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  public get Id(): number {
-    return this._id
-  }
-  public set Id(val: number) {
-    this._id = val
-  }
+  public readonly Id: number
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
   @Column()
   public get Name(): string {
@@ -39,7 +33,7 @@ export default class Example extends BaseEntity {
     this._name = val
   }
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
   @Column()
   public get Text(): string {
@@ -48,5 +42,9 @@ export default class Example extends BaseEntity {
   public set Text(val: string) {
     this._text = val
   }
+
+  @Field()
+  public get nameToUppercase(): string {
+    return this.Name.toUpperCase()
+  }
 }
- 

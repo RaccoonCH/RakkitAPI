@@ -1,12 +1,11 @@
-export default {
-  before: [
-    (req, res, next) => {
+import { Middleware } from '../../class/App'
+import { Request, Response, NextFunction } from 'express'
 
-    }
-  ],
-  after: [
-    (req, res) => {
-      
-    }
-  ]
-}
+export default new Middleware(
+  (req: Request, res: Response, next: NextFunction) => {
+    next()
+  },
+  (req: Request, res: Response) => {
+
+  },
+)
