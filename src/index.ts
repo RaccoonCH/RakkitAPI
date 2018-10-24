@@ -11,7 +11,7 @@ import { ApolloServer } from 'apollo-server-express'
 import { AppLoader } from './class/App'
 import { RPackage, IType } from './class/FrontTypes'
 
-class Main {
+export class Main {
   private _host: string
   private _port: number
   private _apiEndpoint: string
@@ -112,5 +112,5 @@ class Main {
   }
 }
 
-export const mainApp = new Main()
-mainApp.Start()
+export const mainInstance = new Main()
+mainInstance.Start()

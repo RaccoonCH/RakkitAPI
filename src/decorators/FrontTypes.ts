@@ -1,5 +1,5 @@
 import { RPackage, IType } from '../class/FrontTypes'
-import { mainApp } from '../..'
+import { mainInstance } from '../..'
 
 /**
  * Declare a RakkitPackge to show into front-end
@@ -9,7 +9,7 @@ import { mainApp } from '../..'
 export const Package = (rakkitPackage: RPackage): Function => {
   return (target: Function): void => {
     const className = target.name.toLowerCase()
-    mainApp.addRp({
+    mainInstance.addRp({
       Id: className,
       Name: target.name,
       ...rakkitPackage
@@ -26,6 +26,6 @@ export const Package = (rakkitPackage: RPackage): Function => {
 export const Attribute = (type: IType): Function => {
   return (target: Object, key: string): void => {
     const className = target.constructor.name.toLowerCase()
-    mainApp.addRpAttribute(className, key, type)
+    mainInstance.addRpAttribute(className, key, type)
   }
 }
