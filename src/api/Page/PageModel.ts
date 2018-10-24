@@ -1,34 +1,38 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
-import { ObjectType, Field, ID } from 'type-graphql'
-import { Package, Attribute } from '..'
-import RakkitFrontShortText from '../../types/FrontTypes/types/text/RakkitFrontShortText'
-import RakkitFrontID from '../../types/FrontTypes/types/other/RakkitFrontID'
-import RakkitPackage from '../../types/FrontTypes/RakkitPackage'
+import { ObjectType, Field, ID, InputType } from 'type-graphql'
+import { Package, Attribute } from '../../decorators'
+import { RPackage, RId, RShorttext, RObject } from '../../class/FrontTypes'
 import Culture from '../Culture/CultureModel'
-import RakkitFrontObject from '../../types/FrontTypes/types/other/RakkitFrontObject';
+import Example from '../Example/ExampleModel'
 
-@Package(new RakkitPackage('Page package'))
+@Package(new RPackage())
+@InputType('PageInput')
 @ObjectType()
 @Entity({name: 'Page'})
 export default class Page extends BaseEntity {
-  private _id: number
   private _title: string
   private _model: string
   private _content: string
-  private _culture: Culture
   private _url: string
+  private _culture: Culture
+  private _example: Example
 
-  @Attribute(new RakkitFrontID())
+  @Attribute(new RId())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  public get Id(): number {
-    return this._id
+  public readonly Id: number
+
+  @Attribute(new RShorttext())
+  @Field(type => Example, {nullable: true})
+  @ManyToOne(type => Example, example => example.Pages)
+  public get Example(): Example {
+    return this._example
   }
-  public set Id(val: number) {
-    this._id = val
+  public set Example(val: Example) {
+    this._example = val
   }
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
   @Column()
   public get Title(): string {
@@ -38,9 +42,9 @@ export default class Page extends BaseEntity {
     this._title = val
   }
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
-  @Column()
+  @Column('simple-json')
   public get Model(): string {
     return this._model
   }
@@ -48,9 +52,9 @@ export default class Page extends BaseEntity {
     this._model = val
   }
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
-  @Column()
+  @Column('simple-json')
   public get Content(): string {
     return this._content
   }
@@ -58,8 +62,8 @@ export default class Page extends BaseEntity {
     this._content = val
   }
 
-  @Attribute(new RakkitFrontObject('CultureInfo'))
-  @Field(type => Culture)
+  @Attribute(new RObject('CultureInfo'))
+  @Field(type => Culture, {nullable: true})
   @ManyToOne(type => Culture, culture => culture.Pages)
   public get Culture(): Culture {
     return this._culture
@@ -68,7 +72,7 @@ export default class Page extends BaseEntity {
     this._culture = val
   }
 
-  @Attribute(new RakkitFrontShortText())
+  @Attribute(new RShorttext())
   @Field()
   @Column()
   public get Url(): string {
@@ -78,4 +82,3 @@ export default class Page extends BaseEntity {
     this._url = val
   }
 }
- 
