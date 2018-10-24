@@ -1,5 +1,5 @@
 import { BaseEntity } from 'typeorm'
-import { IRelationQuery } from '..'
+import { IRelationQuery, OrderByArgs } from '..'
 
 const queryModelName = 'model'
 type ComposeQueryOptions = {
@@ -8,6 +8,7 @@ type ComposeQueryOptions = {
   limit?: number
   last?: number,
   first?: number,
+  orderBy?: OrderByArgs,
   conditionOperator?: 'or' | 'and'
 }
 
@@ -25,11 +26,13 @@ export class OrmInterface {
     this.Model = model
   }
 
-  private getQueryFieldName(fieldName: string, mainField: string = queryModelName): string {
+  private getQueryFieldName(fieldName: string, mainField: string = null, noBase?: boolean): string {
+    const fieldProps = fieldName.split('.')
+    const basic = (mainField) => mainField ? `${mainField}.${fieldName}` : fieldName
     if (mainField) {
-      return `${mainField}.${fieldName}`
+      return basic(mainField)
     } else {
-      return fieldName
+      return fieldProps.length > 1 ? fieldName : basic(noBase ? null : queryModelName)
     }
   }
 
@@ -48,6 +51,15 @@ export class OrmInterface {
     const queryBuilder = this.Model.createQueryBuilder(queryModelName)
     const relationArgs = new Map()
 
+    if (options.orderBy) {
+      queryBuilder.orderBy(
+        this.getQueryFieldName(options.orderBy.field),
+        options.orderBy.direction
+      )
+    } else {
+      queryBuilder.orderBy(this.getQueryFieldName('Id'), 'ASC')
+    }
+
     if (options.skip && options.limit) {
       queryBuilder.take(options.limit)
       queryBuilder.skip(options.skip)
@@ -60,7 +72,15 @@ export class OrmInterface {
     }
 
     if (options.last) {
-      queryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
+      if (!options.orderBy) {
+        queryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
+      } else {
+        // Reverse the orderBy parameter
+        queryBuilder.orderBy(
+          this.getQueryFieldName(options.orderBy.field),
+          options.orderBy.direction === 'ASC' ? 'DESC' : 'ASC'
+        )
+      }
       queryBuilder.take(options.last)
     }
 
@@ -72,7 +92,7 @@ export class OrmInterface {
         if (typeof relation === 'string') {
           relationObj = {
             select: true,
-            forArg: null,
+            forArg: relation,
             table: relation
           }
         } else {
@@ -88,11 +108,11 @@ export class OrmInterface {
           try {
             queryBuilder.expressionMap.findAliasByName(newAliasName)
           } catch (err) {
-            const queryFielName = pathProps.length > 1 ? relationObj.table : this.getQueryFieldName(relationObj.table)
+            const queryFieldName = this.getQueryFieldName(relationObj.table)
             if (relationObj.select) {
-              queryBuilder.innerJoinAndSelect(queryFielName, newAliasName)
+              queryBuilder.innerJoinAndSelect(queryFieldName, newAliasName)
             } else {
-              queryBuilder.innerJoin(queryFielName, newAliasName)
+              queryBuilder.innerJoin(queryFieldName, newAliasName)
             }
           }
         }
@@ -105,7 +125,7 @@ export class OrmInterface {
 
         // Ignore the GraphQL query parameter if the value is not given (= undefined)
         if (value !== undefined) {
-          const propPath = this.getQueryFieldName(prop, parentProp)
+          const propPath = this.getQueryFieldName(prop, parentProp, true)
 
           // If the given value is a relation, join the table and add the conditions into the where
           const relationValue = relationArgs.get(propPath)

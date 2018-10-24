@@ -8,29 +8,18 @@ import Example from '../Example/ExampleModel'
 @Package(new RPackage())
 @InputType('PageInput')
 @ObjectType()
-@Entity({name: 'Page'})
+@Entity({ name: 'Page' })
 export default class Page extends BaseEntity {
   private _title: string
   private _model: string
   private _content: string
   private _url: string
   private _culture: Culture
-  private _example: Example
 
   @Attribute(new RId())
   @Field(type => ID)
   @PrimaryGeneratedColumn()
   public readonly Id: number
-
-  @Attribute(new RShorttext())
-  @Field(type => Example, {nullable: true})
-  @ManyToOne(type => Example, example => example.Pages)
-  public get Example(): Example {
-    return this._example
-  }
-  public set Example(val: Example) {
-    this._example = val
-  }
 
   @Attribute(new RShorttext())
   @Field()
