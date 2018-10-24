@@ -10,7 +10,7 @@ const getFilePath = (root: string, file: string) => root + file + ext
 //#region Consts
 const ext = '.ts'
 const templateFolder = path.join(__dirname, 'template/')
-const filesToCopy = ['controller', 'router', 'model']
+const filesToCopy = ['controller', 'router', 'model', 'args']
 const rootDir = process.cwd()
 const allArgs = process.argv.splice(2, process.argv.length).map(a => a.toLowerCase())
 const flags = allArgs.filter(a => a[0] === '-')
@@ -29,6 +29,10 @@ const injectVariable: Map<string, Array<Array<string>>> = new Map([
   ]],
   ['router', [
     ['controller_file', getRPObjectName('controller')]
+  ]],
+  ['args', [
+    ['model_file', getRPObjectName('model')],
+    ['args_name', getRPObjectName('args')]
   ]]
 ])
 //#endregion
