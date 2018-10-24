@@ -1,4 +1,4 @@
-import { BaseEntity } from 'typeorm'
+import { BaseEntity, QueryBuilder, getConnection, ObjectType, EntitySchema, QueryRunner, SelectQueryBuilder } from 'typeorm'
 import { IRelationQuery, OrderByArgs } from '..'
 
 const queryModelName = 'model'
@@ -12,17 +12,17 @@ type ComposeQueryOptions = {
   conditionOperator?: 'or' | 'and'
 }
 
-export class OrmInterface {
-  private _model: typeof BaseEntity
+export class OrmInterface<Entity> {
+  private _model: ObjectType<Entity>
 
   public get Model() {
     return this._model
   }
-  public set Model(val: typeof BaseEntity) {
+  public set Model(val: ObjectType<Entity>) {
     this._model = val
   }
 
-  constructor(model: typeof BaseEntity) {
+  constructor(model: ObjectType<Entity>) {
     this.Model = model
   }
 
@@ -45,78 +45,83 @@ export class OrmInterface {
    * @param where The where conditions
    * @param options The other options
    */
-  ComposeQuery(options: ComposeQueryOptions)
+  ComposeQuery()
   ComposeQuery(where: Object, options?: ComposeQueryOptions)
-  ComposeQuery(where: Object | undefined, options: ComposeQueryOptions = {}) {
-    const queryBuilder = this.Model.createQueryBuilder(queryModelName)
+  ComposeQuery(where?: Object, options?: ComposeQueryOptions) {
+    const queryBuilder = getConnection().createQueryBuilder(this.Model, queryModelName)
     const relationArgs = new Map()
+    let conditionOperator: 'or' | 'and' = 'and'
 
-    if (options.orderBy) {
-      queryBuilder.orderBy(
-        this.getQueryFieldName(options.orderBy.field),
-        options.orderBy.direction
-      )
-    } else {
-      queryBuilder.orderBy(this.getQueryFieldName('Id'), 'ASC')
-    }
+    if (options) {
+      conditionOperator = options.conditionOperator
 
-    if (options.skip && options.limit) {
-      queryBuilder.take(options.limit)
-      queryBuilder.skip(options.skip)
-    }
-
-    options.limit && queryBuilder.limit(options.limit)
-
-    if (options.first) {
-      queryBuilder.take(options.first)
-    }
-
-    if (options.last) {
-      if (!options.orderBy) {
-        queryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
-      } else {
-        // Reverse the orderBy parameter
+      if (options.orderBy) {
         queryBuilder.orderBy(
           this.getQueryFieldName(options.orderBy.field),
-          options.orderBy.direction === 'ASC' ? 'DESC' : 'ASC'
+          options.orderBy.direction
         )
+      } else {
+        queryBuilder.orderBy(this.getQueryFieldName('Id'), 'ASC')
       }
-      queryBuilder.take(options.last)
-    }
 
-    if (options.relations) {
-      // Add relations to the query
-      options.relations.map((relation: string | IRelationQuery) => {
-        // Convert the relation parameters to a generic object
-        let relationObj: IRelationQuery
-        if (typeof relation === 'string') {
-          relationObj = {
-            select: true,
-            forArg: relation,
-            table: relation
-          }
+      if (options.skip && options.limit) {
+        queryBuilder.take(options.limit)
+        queryBuilder.skip(options.skip)
+      }
+
+      options.limit && queryBuilder.limit(options.limit)
+
+      if (options.first) {
+        queryBuilder.take(options.first)
+      }
+
+      if (options.last) {
+        if (!options.orderBy) {
+          queryBuilder.orderBy(this.getQueryFieldName('Id'), 'DESC')
         } else {
-          relationObj = relation
+          // Reverse the orderBy parameter
+          queryBuilder.orderBy(
+            this.getQueryFieldName(options.orderBy.field),
+            options.orderBy.direction === 'ASC' ? 'DESC' : 'ASC'
+          )
         }
-        if (relationObj.table) {
-          // Culture.Example => Culture_Example
-          const pathProps = relationObj.table.split('.')
-          const newAliasName = pathProps.join('_')
-          if (relationObj.forArg) {
-            relationArgs.set(relationObj.forArg, newAliasName)
+        queryBuilder.take(options.last)
+      }
+
+      if (options.relations) {
+        // Add relations to the query
+        options.relations.map((relation: string | IRelationQuery) => {
+          // Convert the relation parameters to a generic object
+          let relationObj: IRelationQuery
+          if (typeof relation === 'string') {
+            relationObj = {
+              select: true,
+              forArg: relation,
+              table: relation
+            }
+          } else {
+            relationObj = relation
           }
-          try {
-            queryBuilder.expressionMap.findAliasByName(newAliasName)
-          } catch (err) {
-            const queryFieldName = this.getQueryFieldName(relationObj.table)
-            if (relationObj.select) {
-              queryBuilder.innerJoinAndSelect(queryFieldName, newAliasName)
-            } else {
-              queryBuilder.innerJoin(queryFieldName, newAliasName)
+          if (relationObj.table) {
+            // Culture.Example => Culture_Example
+            const pathProps = relationObj.table.split('.')
+            const newAliasName = pathProps.join('_')
+            if (relationObj.forArg) {
+              relationArgs.set(relationObj.forArg, newAliasName)
+            }
+            try {
+              queryBuilder.expressionMap.findAliasByName(newAliasName)
+            } catch (err) {
+              const queryFieldName = this.getQueryFieldName(relationObj.table)
+              if (relationObj.select) {
+                queryBuilder.innerJoinAndSelect(queryFieldName, newAliasName)
+              } else {
+                queryBuilder.innerJoin(queryFieldName, newAliasName)
+              }
             }
           }
-        }
-      })
+        })
+      }
     }
 
     const parseObjToQuery = (obj: Object, mainField: string = queryModelName, parentProp: string = null) => {
@@ -136,7 +141,7 @@ export class OrmInterface {
             const whereCondition = this.getConditionString(mainField, prop)
             const whereValueToReplace = { [prop]: value }
             if (queryBuilder.expressionMap.wheres.length > 0) {
-              if (options.conditionOperator === 'or') {
+              if (conditionOperator === 'or') {
                 queryBuilder.orWhere(whereCondition, whereValueToReplace)
               } else {
                 queryBuilder.andWhere(whereCondition, whereValueToReplace)
