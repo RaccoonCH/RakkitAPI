@@ -1,9 +1,10 @@
 import ExampleController from './ExampleController'
+import { Router, Route } from '../../class/App'
 
-export default [
-  ['get', '/', ExampleController.getAll],
-  ['get', '/:id', ExampleController.getOne],
-  ['post', '/', ExampleController.create],
-  ['put', '/:id', ExampleController.update],
-  ['delete', '/:id', ExampleController.update]
-]
+export default new Router([
+  new Route('get', '/', ExampleController.getAll),
+  new Route('get', '/:id', ExampleController.getOne),
+  new Route('post', '/', ExampleController.create),
+  new Route('put', '/:id', ExampleController.update),
+  new Route('delete', '/:id', ExampleController.remove)
+])
