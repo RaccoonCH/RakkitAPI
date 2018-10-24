@@ -3,12 +3,9 @@ import { QueryArgs } from '../../class/App'
 import ExampleModel from './ExampleModel'
 
 @InputType()
-class ExampleArgs implements Pick<ExampleModel, 'Name' | 'Text'> {
+export class ExampleArgs implements Pick<ExampleModel, 'Name'> {
   @Field({ nullable: true })
   public readonly Name: string
-
-  @Field({ nullable: true })
-  public readonly Text: string
 }
 
 @ArgsType()
