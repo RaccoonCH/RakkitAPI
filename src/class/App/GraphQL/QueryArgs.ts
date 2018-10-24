@@ -1,4 +1,13 @@
-import { ArgsType, Field } from 'type-graphql'
+import { ArgsType, Field, InputType } from 'type-graphql'
+
+@InputType()
+export abstract class OrderByArgs {
+  @Field()
+  field: string
+
+  @Field()
+  direction: 'DESC' | 'ASC'
+}
 
 @ArgsType()
 export abstract class QueryArgs {
@@ -18,4 +27,7 @@ export abstract class QueryArgs {
 
   @Field({ nullable: true })
   readonly conditionOperator: 'or' | 'and'
+
+  @Field(type => OrderByArgs, { nullable: true })
+  readonly orderBy: OrderByArgs
 }

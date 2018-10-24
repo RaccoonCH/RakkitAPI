@@ -11,17 +11,14 @@ const PageOrmInterface = new OrmInterface(PageModel)
 export default class PageController {
   //#region GraphQL
   @Query(returns => [PageModel])
-  async pages(@Args() { where, skip, limit, first, last, conditionOperator }: PageArgs) {
+  async pages(@Args() { where, skip, limit, first, last, conditionOperator, orderBy }: PageArgs) {
     const query = PageOrmInterface.ComposeQuery(where, {
-      relations: [{
-        select: true,
-        forArg: 'CultureA',
-        table: CultureModel.name
-      }],
+      relations: [ CultureModel.name ],
       skip,
       limit,
       first,
       last,
+      orderBy,
       conditionOperator
     })
     console.log(query.getSql())

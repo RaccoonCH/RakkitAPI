@@ -6,14 +6,12 @@ import Page from '../Page/PageModel'
 import Example from '../Example/ExampleModel'
 
 @Package(new RPackage())
-@InputType('CultureInput')
 @ObjectType()
-@Entity({name: 'Culture'})
+@Entity({ name: 'Culture' })
 export default class Culture extends BaseEntity {
-  private pages: Page[]
   private langCode: string
   private countryCode: string
-  private examples: Example[]
+  private pages: Page[]
 
   @Attribute(new RId())
   @Field(type => ID, { nullable: true })
@@ -53,14 +51,5 @@ export default class Culture extends BaseEntity {
   }
   public set Pages(val: Page[]) {
     this.pages = val
-  }
-
-  @Field(type => [Example], { nullable: true })
-  @OneToMany(type => Example, culture => culture.Culture)
-  public get Examples(): Example[] {
-    return this.examples
-  }
-  public set Examples(val: Example[]) {
-    this.examples = val
   }
 }

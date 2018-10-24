@@ -3,7 +3,7 @@ import { QueryArgs } from '../../class/App'
 import CultureModel from './CultureModel'
 
 @InputType()
-class CultureArgs implements Pick<CultureModel, 'LangCode' | 'CountryCode'> {
+export class CultureArgs implements Pick<CultureModel, 'LangCode' | 'CountryCode'> {
   @Field({ nullable: true })
   public readonly LangCode: string
 
