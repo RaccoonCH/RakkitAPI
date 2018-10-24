@@ -4,7 +4,7 @@ import { Middleware, Router, Route, Action, FileUtils } from '..'
 import * as path from 'path'
 
 export class AppLoader {
-  private _apiPath: string
+  protected _apiPath: string
   private _filesExtenstion: string = 'ts'
   private _resolvers: Function[] = []
   private _appFileUtil: FileUtils
