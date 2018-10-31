@@ -5,7 +5,7 @@ import { RPackage, RId, RShorttext } from '../../class/FrontTypes'
 
 @Package(new RPackage('_MODEL_ package'))
 @ObjectType()
-@Entity({name: '_MODEL_'})
+@Entity({ name: '_MODEL_' })
 export default class _MODEL_ extends BaseEntity {
   private _name: string
 
@@ -24,4 +24,3 @@ export default class _MODEL_ extends BaseEntity {
     this._name = val
   }
 }
- 

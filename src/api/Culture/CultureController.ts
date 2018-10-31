@@ -11,8 +11,5 @@ export default class CultureController {
   //#endregion
 
   //#region REST
-  static async getAll(req, res) {
-    res.send(await CultureModel.find())
-  }
   //#endregion
 }

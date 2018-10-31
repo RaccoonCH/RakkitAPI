@@ -27,11 +27,6 @@
       }
     ],
     "no-parameter-reassignment": true,
-    "align": [
-      true,
-      "arguments",
-      "parameters"
-    ],
     "ter-prefer-arrow-callback": [
       true
     ],
