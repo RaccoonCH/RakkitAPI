@@ -9,7 +9,7 @@ import { mainInstance } from '../..'
 export const Package = (rakkitPackage: RPackage): Function => {
   return (target: Function): void => {
     const className = target.name.toLowerCase()
-    mainInstance.addRp({
+    mainInstance.AddRp({
       Id: className,
       Name: target.name,
       ...rakkitPackage
@@ -26,6 +26,6 @@ export const Package = (rakkitPackage: RPackage): Function => {
 export const Attribute = (type: IType): Function => {
   return (target: Object, key: string): void => {
     const className = target.constructor.name.toLowerCase()
-    mainInstance.addRpAttribute(className, key, type)
+    mainInstance.AddRpAttribute(className, key, type)
   }
 }

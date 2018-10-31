@@ -5,7 +5,7 @@ module.exports = {
   username: 'root',
   password: '',
   database: 'rakkit',
-  synchronize: true,
+  synchronize: false,
   entities: [
     `${__dirname}/src/api/*/*Model.ts`
   ]

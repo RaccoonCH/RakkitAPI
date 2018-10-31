@@ -4,7 +4,7 @@ import { Middleware, Router, Route, Action, FileUtils } from '..'
 import * as path from 'path'
 
 export class AppLoader {
-  protected _apiPath: string
+  private _apiPath: string
   private _filesExtenstion: string = 'ts'
   private _resolvers: Function[] = []
   private _appFileUtil: FileUtils
@@ -59,11 +59,13 @@ export class AppLoader {
    * Example with a RakkitPackage named: Page
    * .../api/Page/myRouteDeclaredIntoTheRouter
    */
-  Load(): void {
-    this.AppFileUtil.ScanDir((file: string) => {
-      const routerFile = this.getRpObjectPath(file, 'router')
-      const controllerFile = this.getRpObjectPath(file, 'controller')
-      const middlewareFile = this.getRpObjectPath(file, 'middleware')
+  Load()
+  Load(RpName: string)
+  Load(RpName?: string): void {
+    const LoadRp = (RpName: string): void => {
+      const routerFile = this.getRpObjectPath(RpName, 'router')
+      const controllerFile = this.getRpObjectPath(RpName, 'controller')
+      const middlewareFile = this.getRpObjectPath(RpName, 'middleware')
 
       if (this.AppFileUtil.FileExists(controllerFile)) {
 
@@ -92,15 +94,20 @@ export class AppLoader {
           middlewares.After && middlewares.After.forEach((rakkitAfterMiddleware: Action) => apiRouter.use(rakkitAfterMiddleware))
 
           // Import API with the right route name .../api/page (for example)
-          this.ExpressRouter.use(`/${rakkitRouter.Name || file.toLocaleLowerCase()}`, apiRouter)
+          this.ExpressRouter.use(`/${rakkitRouter.Name || RpName.toLocaleLowerCase()}`, apiRouter)
         }
 
-        console.log('✅  RP:', Color(`${file.toLocaleLowerCase()}`, 'fg.green'))
+        console.log('✅  RP:', Color(`${RpName.toLocaleLowerCase()}`, 'fg.green'))
       } else {
-        console.log(`❌  RP: ${file} - ${Color('the controller is required', 'fg.red')}`)
+        console.log(`❌  RP: ${RpName} - ${Color('the controller is required', 'fg.red')}`)
       }
-    })
-    // Get all RakkitPackage objects
-    // this.ExpressRouter.get('/', (req: Request, res: Response) => res.send(RPs))
+    }
+    if (RpName) {
+      // Load a single RakkitPackage
+      LoadRp(RpName)
+    } else {
+      // Load all RakkitPackage
+      this.AppFileUtil.ScanDir(LoadRp)
+    }
   }
 }

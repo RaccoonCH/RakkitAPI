@@ -28,8 +28,5 @@ export default class PageController {
   //#endregion
 
   //#region REST
-  static async getAll(req: Request, res: Response) {
-    res.send(await PageModel.find())
-  }
   //#endregion
 }
