@@ -13,12 +13,16 @@ export default class User extends BaseEntity {
   private _password: string
   private _role: string
 
-  constructor(name, email, password, role = 'default') {
-    super()
-    this.Name = name
-    this.Email = email
-    this.Role = role
-    this.Password = password ? hashSync(password, 10) : ''
+  constructor(name: string, email: string, password: string, confirm: string, role = 'default') {
+    if (password === confirm) {
+      super()
+      this.Name = name
+      this.Email = email
+      this.Role = role
+      this.Password = password ? hashSync(password, 10) : ''
+    } else {
+      throw new Error('password:match')
+    }
   }
 
   @Attribute(new RId())

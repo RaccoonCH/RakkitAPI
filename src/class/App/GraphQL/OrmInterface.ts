@@ -1,4 +1,4 @@
-import { BaseEntity, QueryBuilder, getConnection, ObjectType, EntitySchema, QueryRunner, SelectQueryBuilder } from 'typeorm'
+import { getConnection, ObjectType, SelectQueryBuilder } from 'typeorm'
 import { IRelationQuery, OrderByArgs } from '..'
 
 const queryModelName = 'model'
