@@ -3,7 +3,7 @@ import { QueryArgs } from '../../../class/App'
 import UserModel from '../UserModel'
 
 @InputType()
-export class UserArgs implements Pick<UserModel, 'Id' | 'Name' | 'Email' | 'Role'> {
+export class UserType implements Pick<UserModel, 'Id' | 'Name' | 'Email' | 'Role'> {
   @Field({ nullable: true })
   public readonly Id: number
 
@@ -18,7 +18,7 @@ export class UserArgs implements Pick<UserModel, 'Id' | 'Name' | 'Email' | 'Role
 }
 
 @ArgsType()
-export default class extends QueryArgs {
-  @Field(type => UserArgs, { nullable: true })
-  where: UserArgs
+export class UserArgs extends QueryArgs {
+  @Field(type => UserType, { nullable: true })
+  where: UserType
 }
