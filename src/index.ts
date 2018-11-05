@@ -61,7 +61,13 @@ export class Main extends AppLoader {
 
       // Load the application (all RakkitPackage)
       this.Load()
-      this.ExpressRouter.use('/', (req, res) => res.send(this._rps))
+      this.ExpressRouter.use('/', (req, res) => {
+        if (this.RpNames.length === this._rps.length) {
+          res.send(this._rps)
+        } else {
+          res.status(404).send('loading')
+        }
+      })
 
       if (this._corsEnabled) {
         this._expressApp.use(Cors())
