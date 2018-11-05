@@ -1,10 +1,11 @@
 import { ArgsType, Field } from 'type-graphql'
+import UserModel from '../../UserModel'
 
 @ArgsType()
-export class LoginArgs {
+export class LoginArgs implements Pick<UserModel, 'Name' | 'Password'> {
   @Field()
-  name: string
+  Name: string
 
   @Field()
-  password: string
+  Password: string
 }
