@@ -4,8 +4,8 @@ import { ArgsType, Field, ObjectType } from 'type-graphql'
 @ObjectType()
 export class LoginResponse {
   @Field()
-  token: string
+  Token: string
 
   @Field(type => GetableUser)
-  user: GetableUser
+  User: GetableUser
 }
