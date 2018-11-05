@@ -1,4 +1,4 @@
-import { BaseEntity, QueryBuilder, getConnection, ObjectType, EntitySchema, QueryRunner, SelectQueryBuilder } from 'typeorm'
+import { getConnection, ObjectType, SelectQueryBuilder } from 'typeorm'
 import { IRelationQuery, OrderByArgs } from '..'
 
 const queryModelName = 'model'
@@ -45,9 +45,9 @@ export class OrmInterface<Entity> {
    * @param where The where conditions
    * @param options The other options
    */
-  ComposeQuery()
-  ComposeQuery(where: Object, options?: ComposeQueryOptions)
-  ComposeQuery(where?: Object, options?: ComposeQueryOptions) {
+  ComposeQuery(): SelectQueryBuilder<Entity>
+  ComposeQuery(where: Object, options?: ComposeQueryOptions): SelectQueryBuilder<Entity>
+  ComposeQuery(where?: Object, options?: ComposeQueryOptions): SelectQueryBuilder<Entity> {
     const queryBuilder = getConnection().createQueryBuilder(this.Model, queryModelName)
     const relationArgs = new Map()
     let conditionOperator: 'or' | 'and' = 'and'
