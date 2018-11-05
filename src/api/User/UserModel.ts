@@ -10,8 +10,8 @@ import { hashSync } from 'bcrypt'
 export default class User extends BaseEntity {
   private _name: string
   private _email: string
-  private _password: string
   private _role: string
+  private _password: string
 
   constructor(name: string, email: string, password: string, confirm: string, role = 'default') {
     if (password === confirm) {

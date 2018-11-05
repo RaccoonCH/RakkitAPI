@@ -1,12 +1,10 @@
-import { DeleteArgs } from './Types/Delete/DeleteArgs';
+import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs, UpdateArgs, DeleteArgs } from './Types'
 import { Query, Resolver, Args, Mutation, Authorized, Ctx } from 'type-graphql'
-import UserModel from './UserModel'
 import { OrmInterface, ErrorHelper } from '../../class/App'
-import { LoginArgs, LoginResponse, GetableUser, RegisterArgs } from './Types'
 import { sign } from 'jsonwebtoken'
 import { compare } from 'bcrypt'
-import { UpdateArgs } from './Types/update/UpdateArgs'
 import { Context } from 'apollo-server-core'
+import UserModel from './UserModel'
 
 const userOrmInterface = new OrmInterface(UserModel)
 
@@ -14,13 +12,13 @@ const userOrmInterface = new OrmInterface(UserModel)
 export default class UserController {
   //#region GraphQL
   @Query(returns => LoginResponse)
-  async login(@Args() { name, password } : LoginArgs): Promise<LoginResponse> {
+  async login(@Args() { Name, Password } : LoginArgs): Promise<LoginResponse> {
     const user: UserModel = await userOrmInterface.ComposeQuery({
-      name
+      Name
     }).getOne()
     const notFoundError = ErrorHelper.getError('user', 'notfound')
     if (user) {
-      if (await compare(password, user.Password)) {
+      if (await compare(Password, user.Password)) {
         // Send the JWT Token
         const token = sign({
           Id: user.Id,
@@ -29,8 +27,8 @@ export default class UserController {
           Role: user.Role
         }, process.env.SecretKey)
         return {
-          token,
-          user: new GetableUser(user)
+          Token: token,
+          User: new GetableUser(user)
         }
       } else {
         throw new Error(notFoundError)
@@ -38,6 +36,19 @@ export default class UserController {
     } else {
       throw new Error(notFoundError)
     }
+  }
+
+  @Authorized()
+  @Query(returns => [GetableUser])
+  async users(@Args() { where, last, skip, conditionOperator, orderBy, first, limit }: UserArgs) {
+    return await userOrmInterface.ComposeQuery(where, {
+      first,
+      conditionOperator,
+      orderBy,
+      limit,
+      last,
+      skip
+    }).getMany()
   }
 
   @Mutation(returns => GetableUser)
@@ -61,9 +72,9 @@ export default class UserController {
 
   @Authorized()
   @Mutation(returns => String)
-  async delete(@Args() { id } : DeleteArgs) {
+  async deleteUser(@Args() { Id } : DeleteArgs) {
     try {
-      await UserModel.delete(id)
+      await UserModel.delete(Id)
       return 'ok'
     } catch (err) {
       throw new Error(ErrorHelper.getError('db', 'error'))
@@ -71,7 +82,7 @@ export default class UserController {
   }
 
   @Mutation(returns => GetableUser)
-  async update(
+  async updateUser(
     @Args() { Id, Email, Name, Role, Password, Confirm } : UpdateArgs,
     @Ctx() context: Context
   ) {

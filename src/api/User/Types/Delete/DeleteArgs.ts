@@ -1,7 +1,8 @@
 import { ArgsType, Field } from 'type-graphql'
+import UserModel from '../../UserModel'
 
 @ArgsType()
-export class DeleteArgs {
+export class DeleteArgs implements Pick<UserModel, 'Id'> {
   @Field()
-  id: number
+  Id: number
 }
