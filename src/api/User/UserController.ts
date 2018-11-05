@@ -2,7 +2,7 @@ import { DeleteArgs } from './Types/Delete/DeleteArgs';
 import { Query, Resolver, Args, Mutation, Authorized, Ctx } from 'type-graphql'
 import UserModel from './UserModel'
 import { OrmInterface, ErrorHelper } from '../../class/App'
-import { LoginArgs, LoginResponse, GetableUser, RegisterArgs } from './Types'
+import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs } from './Types'
 import { sign } from 'jsonwebtoken'
 import { compare } from 'bcrypt'
 import { UpdateArgs } from './Types/update/UpdateArgs'
@@ -40,6 +40,19 @@ export default class UserController {
     }
   }
 
+  @Authorized()
+  @Query(returns => [GetableUser])
+  async users(@Args() { where, last, skip, conditionOperator, orderBy, first, limit }: UserArgs) {
+    return await userOrmInterface.ComposeQuery(where, {
+      first,
+      conditionOperator,
+      orderBy,
+      limit,
+      last,
+      skip
+    }).getMany()
+  }
+
   @Mutation(returns => GetableUser)
   async register(@Args() { Name, Email, Password, Confirm }: RegisterArgs): Promise<GetableUser> {
     if (Name && Email && Password && Confirm) {
@@ -61,7 +74,7 @@ export default class UserController {
 
   @Authorized()
   @Mutation(returns => String)
-  async delete(@Args() { id } : DeleteArgs) {
+  async deleteUser(@Args() { id } : DeleteArgs) {
     try {
       await UserModel.delete(id)
       return 'ok'
@@ -71,7 +84,7 @@ export default class UserController {
   }
 
   @Mutation(returns => GetableUser)
-  async update(
+  async updateUser(
     @Args() { Id, Email, Name, Role, Password, Confirm } : UpdateArgs,
     @Ctx() context: Context
   ) {

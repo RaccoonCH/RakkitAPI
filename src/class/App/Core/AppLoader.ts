@@ -9,6 +9,11 @@ export class AppLoader {
   private _resolvers: Function[] = []
   private _appFileUtil: FileUtils
   private _expressRouter: ExpressRouter = ExpressRouter()
+  private _rpNames: string[] = []
+
+  public get RpNames(): string[] {
+    return this._rpNames
+  }
 
   public get ApiPath(): string {
     return this._apiPath
@@ -63,6 +68,8 @@ export class AppLoader {
   Load(RpName: string)
   Load(RpName?: string): void {
     const LoadRp = (RpName: string): void => {
+      this.RpNames.push(RpName)
+
       const routerFile = this.getRpObjectPath(RpName, 'router')
       const controllerFile = this.getRpObjectPath(RpName, 'controller')
       const middlewareFile = this.getRpObjectPath(RpName, 'middleware')
