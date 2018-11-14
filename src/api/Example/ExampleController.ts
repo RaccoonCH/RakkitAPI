@@ -9,6 +9,11 @@ export default class ExampleController {
     return ExampleModel.find()
   }
 
+  @Query(returns => String)
+  hello() {
+    return 'okay'
+  }
+
   // The @Root refers to the self element instance
   @FieldResolver()
   nameToUppercase2(@Root() exampleInstance: ExampleModel): string {
