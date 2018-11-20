@@ -1,24 +1,12 @@
-import { IType, IText } from '../..'
+import { Type, IText } from '../..'
 
-export class RMarkdown implements IType, IText {
-  TypeName: string = 'text:md'
-  IsEditable: boolean
-  IsInHeader: boolean
-  IsSearchable: boolean
-  PlaceOrder: number
-  Placeholder: string
+export class RMarkdown extends Type implements IText {
+  public readonly placeholder: string
 
   constructor(
-    placeholder: string = null,
-    isInHeader: boolean = false,
-    isSearchable: boolean = false,
-    isEditable: boolean = true,
-    placeOrder: number = 0
+    placeholder?: string
   ) {
-    this.Placeholder = placeholder
-    this.IsEditable = isEditable
-    this.IsInHeader = isInHeader
-    this.IsSearchable = isSearchable
-    this.PlaceOrder = placeOrder
+    super('text:md')
+    this.placeholder = placeholder
   }
 }

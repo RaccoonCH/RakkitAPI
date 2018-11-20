@@ -1,4 +1,4 @@
 export interface INumber {
-  Min?: number
-  Max?: number
+  readonly min?: number
+  readonly max?: number
 }

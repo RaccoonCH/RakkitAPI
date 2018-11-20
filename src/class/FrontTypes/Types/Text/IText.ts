@@ -1,3 +1,3 @@
 export interface IText {
-  Placeholder?: string
+  readonly placeholder?: string
 }

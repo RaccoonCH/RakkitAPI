@@ -53,7 +53,7 @@ if (flags.includes('-m')) {
 }
 
 // The RakkitPackage dir
-const creationDir = path.join(rootDir, 'src/api', RPNameUpperFirstLetter + '/')
+const creationDir = path.join(rootDir, 'src/api', `${RPNameUpperFirstLetter}/`)
 
 fs.mkdir(creationDir, (err: Error) => {
   if (!err) {

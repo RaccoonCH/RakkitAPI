@@ -1,14 +1,14 @@
 export class RPackage {
-  Id: string
-  Name: string
-  Description: string
-  RequiredRole: 'default' | 'super'
-  Icon?: string
-  Attributes: {} = {}
+  public readonly id: string
+  public readonly name: string
+  public readonly description: string
+  public readonly requiredRole: 'default' | 'super'
+  public readonly icon?: string
+  public readonly attributes: {} = {}
 
   constructor(description: string = null, icon: string = null, requiredRole: 'default' | 'super' = 'default') {
-    this.Description = description || 'A Rakkit package'
-    this.Icon = icon
-    this.RequiredRole = requiredRole
+    this.description = description || 'A Rakkit package'
+    this.icon = icon
+    this.requiredRole = requiredRole
   }
 }

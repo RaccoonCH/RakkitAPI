@@ -1,8 +1,8 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { ObjectType, Field, ID } from 'type-graphql'
+import { hashSync } from 'bcrypt'
 import { Attribute, Package } from '../../decorators'
 import { RPackage, RId, RShorttext } from '../../class/FrontTypes'
-import { hashSync } from 'bcrypt'
 
 @Package(new RPackage('User package'))
 @ObjectType()
