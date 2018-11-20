@@ -5,7 +5,7 @@ import { Query, Resolver, FieldResolver, Root } from 'type-graphql'
 export default class ExampleController {
   //#region GraphQL
   @Query(returns => [ExampleModel])
-  async getAllExample() {
+  async examples() {
     return ExampleModel.find()
   }
 

@@ -1,5 +1,6 @@
 export * from './Types/Package'
-export * from './Types/IType'
+export * from './Types/Type'
+export * from './Types/TypeParams'
 
 export * from './Types/Number/INumber'
 export * from './Types/Text/IText'

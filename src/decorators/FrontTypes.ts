@@ -1,4 +1,4 @@
-import { RPackage, IType } from '../class/FrontTypes'
+import { RPackage, Type, TypeParams } from '../class/FrontTypes'
 import { mainInstance } from '../..'
 
 /**
@@ -10,8 +10,8 @@ export const Package = (rakkitPackage: RPackage): Function => {
   return (target: Function): void => {
     const className = target.name.toLowerCase()
     mainInstance.AddRp({
-      Id: className,
-      Name: target.name,
+      id: className,
+      name: target.name,
       ...rakkitPackage
     })
   }
@@ -23,9 +23,9 @@ export const Package = (rakkitPackage: RPackage): Function => {
  * It always called before Package decorator
  * @param type The front-end type, it describe how the datas will be displayed
  */
-export const Attribute = (type: IType): Function => {
+export const Attribute = (type: Type, params: TypeParams = { isEditable: true, isInHeader: true, isSearchable: false, placeOrder: 0 }): Function => {
   return (target: Object, key: string): void => {
     const className = target.constructor.name.toLowerCase()
-    mainInstance.AddRpAttribute(className, key, type)
+    mainInstance.AddRpAttribute(className, key, type, params)
   }
 }

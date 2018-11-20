@@ -1,4 +1,4 @@
-import { GetableUser } from './api/User/Types/GetableUser';
+import { GetableUser } from './api/User/Types/GetableUser'
 import 'reflect-metadata'
 import { config } from 'dotenv'
 import * as Path from 'path'
@@ -12,7 +12,7 @@ import { createServer, Server } from 'http'
 import { Color } from './misc'
 import { ApolloServer } from 'apollo-server-express'
 import { AppLoader } from './class/App'
-import { RPackage, IType } from './class/FrontTypes'
+import { RPackage, Type, TypeParams } from './class/FrontTypes'
 import { GraphQLSchema } from 'graphql'
 
 export class Main extends AppLoader {
@@ -144,7 +144,7 @@ export class Main extends AppLoader {
   public AddRp(rp: RPackage): void {
     this._rps.push({
       ...rp,
-      Attributes: this._rpsAttributes[rp.Id]
+      attributes: this._rpsAttributes[rp.id]
     })
   }
 
@@ -155,11 +155,19 @@ export class Main extends AppLoader {
    * @param key the property name
    * @param rakkitFrontType the parameter in the decorator parameter
    */
-  public AddRpAttribute(className: string, key: string, rakkitFrontType: IType): void {
+  public AddRpAttribute(
+    className: string,
+    key: string,
+    rakkitFrontType: Type,
+    rakkitAttributeParams: TypeParams
+  ): void {
     if (!this._rpsAttributes[className]) {
       this._rpsAttributes[className] = {}
     }
-    this._rpsAttributes[className][key] = rakkitFrontType
+    this._rpsAttributes[className][key] = {
+      ...rakkitAttributeParams,
+      ...rakkitFrontType
+    }
   }
 }
 
