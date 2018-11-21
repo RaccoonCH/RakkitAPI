@@ -1,10 +1,8 @@
-import { getConnection } from 'typeorm'
 import { Query, Resolver, Args } from 'type-graphql'
 import PageModel from './PageModel'
 import { OrmInterface } from '../../class/App'
 import CultureModel from '../Culture/CultureModel'
 import PageArgs from './PageArgs'
-import { Request, Response } from 'express'
 
 const pageOrmInterface = new OrmInterface(PageModel)
 
@@ -22,7 +20,6 @@ export default class PageController {
       orderBy,
       conditionOperator
     })
-    console.log(query.getSql())
     return query.getMany()
   }
   //#endregion

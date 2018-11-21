@@ -4,7 +4,7 @@ export class RLongtext extends Type implements IText {
   public readonly placeholder: string
 
   constructor(placeholder?: string) {
-    super('text:long')
+    super('long', 'text')
     this.placeholder = placeholder
   }
 }

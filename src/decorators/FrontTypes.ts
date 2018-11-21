@@ -1,4 +1,4 @@
-import { RPackage, Type, TypeParams } from '../class/FrontTypes'
+import { Type, TypeParams, IPackageParams } from '../class/FrontTypes'
 import { mainInstance } from '../..'
 
 /**
@@ -6,13 +6,14 @@ import { mainInstance } from '../..'
  * It always called after Attribute decorator
  * @param rakkitPackage The RakkitPackage object with informations (description, icon, ...)
  */
-export const Package = (rakkitPackage: RPackage): Function => {
+export const Package = (rakkitPackage?: IPackageParams): Function => {
   return (target: Function): void => {
     const className = target.name.toLowerCase()
     mainInstance.AddRp({
       id: className,
       name: target.name,
-      ...rakkitPackage
+      ...(rakkitPackage || {}),
+      attributes: []
     })
   }
 }

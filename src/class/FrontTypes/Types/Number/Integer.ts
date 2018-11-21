@@ -8,7 +8,7 @@ export class RInteger extends Type implements INumber {
     min?: number,
     max?: number
   ) {
-    super('number:int')
+    super('int', 'number')
     this.min = min
     this.max = max
   }

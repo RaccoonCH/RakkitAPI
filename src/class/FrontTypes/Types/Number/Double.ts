@@ -10,7 +10,7 @@ export class RDouble extends Type implements INumber {
     min?: number,
     max?: number
   ) {
-    super('number:double')
+    super('double', 'number')
     this.precision = precision
     this.min = min
     this.max = max

@@ -1,6 +1,6 @@
 import  { Type } from '../../'
 
-export default class RDate extends Type {
+export class RDate extends Type {
   public readonly placeholder: string
   public readonly format: string
 
@@ -8,7 +8,7 @@ export default class RDate extends Type {
     placeholder?: string,
     format?: string
   ) {
-    super('other:date')
+    super('date')
     this.format = format
     this.placeholder = placeholder
   }

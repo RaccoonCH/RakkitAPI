@@ -38,7 +38,7 @@ export default class UserController {
     }
   }
 
-  @Authorized()
+  // @Authorized()
   @Query(returns => [GetableUser])
   async users(@Args() { where, last, skip, conditionOperator, orderBy, first, limit }: UserArgs) {
     return await userOrmInterface.ComposeQuery(where, {

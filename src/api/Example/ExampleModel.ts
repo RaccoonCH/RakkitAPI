@@ -1,11 +1,9 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
-import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Field, ObjectType, ID } from 'type-graphql'
 import { Attribute, Package } from '../../decorators'
-import { RPackage, RShorttext, RId } from '../../class/FrontTypes'
-import Page from '../Page/PageModel'
-import Culture from '../Culture/CultureModel'
+import { RShorttext, RId } from '../../class/FrontTypes'
 
-@Package(new RPackage())
+@Package()
 @ObjectType()
 @Entity()
 export default class Example extends BaseEntity {

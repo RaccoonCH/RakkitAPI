@@ -6,7 +6,7 @@ export class RMarkdown extends Type implements IText {
   constructor(
     placeholder?: string
   ) {
-    super('text:md')
+    super('md', 'text')
     this.placeholder = placeholder
   }
 }

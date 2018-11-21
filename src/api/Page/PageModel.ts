@@ -1,11 +1,10 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
 import { ObjectType, Field, ID, InputType } from 'type-graphql'
 import { Package, Attribute } from '../../decorators'
-import { RPackage, RId, RShorttext, RObject } from '../../class/FrontTypes'
+import { RId, RShorttext, RObject } from '../../class/FrontTypes'
 import Culture from '../Culture/CultureModel'
-import Example from '../Example/ExampleModel'
 
-@Package(new RPackage())
+@Package()
 @InputType('PageInput')
 @ObjectType()
 @Entity({ name: 'Page' })
@@ -31,7 +30,7 @@ export default class Page extends BaseEntity {
     this._title = val
   }
 
-  @Attribute(new RShorttext())
+  @Attribute(new RShorttext(), { isInHeader: false })
   @Field()
   @Column('simple-json')
   public get Model(): string {
@@ -41,7 +40,7 @@ export default class Page extends BaseEntity {
     this._model = val
   }
 
-  @Attribute(new RShorttext())
+  @Attribute(new RShorttext(), { isInHeader: false })
   @Field()
   @Column('simple-json')
   public get Content(): string {

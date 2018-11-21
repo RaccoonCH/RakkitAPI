@@ -1,7 +1,13 @@
 export abstract class Type {
-  public readonly typeName: string
+  public readonly type: {
+    name: string,
+    subject: string
+  }
 
-  constructor(typeName: string) {
-    this.typeName = typeName
+  constructor(typeName: string, typeSubject?: string) {
+    this.type = {
+      name: typeName,
+      subject: typeSubject || 'other'
+    }
   }
 }
