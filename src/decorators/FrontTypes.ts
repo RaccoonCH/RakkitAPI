@@ -8,10 +8,13 @@ import { mainInstance } from '../..'
  */
 export const Package = (rakkitPackage?: IPackageParams): Function => {
   return (target: Function): void => {
-    const className = target.name.toLowerCase()
+    let name = target.name
+    if (rakkitPackage && rakkitPackage.name) {
+      name = rakkitPackage.name
+    }
     mainInstance.AddRp({
-      id: className,
-      name: target.name,
+      name,
+      className: target.name,
       ...(rakkitPackage || {}),
       attributes: []
     })
@@ -26,7 +29,6 @@ export const Package = (rakkitPackage?: IPackageParams): Function => {
  */
 export const Attribute = (type: Type, params: TypeParams = { isEditable: true, isInHeader: true, isSearchable: false, placeOrder: 0 }): Function => {
   return (target: Object, key: string): void => {
-    const className = target.constructor.name.toLowerCase()
-    mainInstance.AddRpAttribute(className, key, type, params)
+    mainInstance.AddRpAttribute(target.constructor.name, key, type, params)
   }
 }

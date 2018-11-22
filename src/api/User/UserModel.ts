@@ -4,10 +4,10 @@ import { hashSync } from 'bcrypt'
 import { Attribute, Package } from '../../decorators'
 import { RId, RShorttext, RPassword } from '../../class/FrontTypes'
 
-@Package({ description: 'User package' })
+@Package({ name: 'User', description: 'User package' })
 @ObjectType()
 @Entity({ name: 'User' })
-export default class User extends BaseEntity {
+export default class UserModel extends BaseEntity {
   private _name: string
   private _email: string
   private _role: string

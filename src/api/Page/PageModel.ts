@@ -2,18 +2,18 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 't
 import { ObjectType, Field, ID, InputType } from 'type-graphql'
 import { Package, Attribute } from '../../decorators'
 import { RId, RShorttext, RObject } from '../../class/FrontTypes'
-import Culture from '../Culture/CultureModel'
+import CultureModel from '../Culture/CultureModel'
 
-@Package()
+@Package({ name: 'Page' })
 @InputType('PageInput')
 @ObjectType()
 @Entity({ name: 'Page' })
-export default class Page extends BaseEntity {
+export default class PageModel extends BaseEntity {
   private _title: string
   private _model: string
   private _content: string
   private _url: string
-  private _culture: Culture
+  private _culture: CultureModel
 
   @Attribute(new RId())
   @Field(type => ID)
@@ -51,12 +51,12 @@ export default class Page extends BaseEntity {
   }
 
   @Attribute(new RObject('CultureInfo'))
-  @Field(type => Culture, {nullable: true})
-  @ManyToOne(type => Culture, culture => culture.Pages)
-  public get Culture(): Culture {
+  @Field(type => CultureModel, { nullable: true })
+  @ManyToOne(type => CultureModel, cultureModel => cultureModel.Pages)
+  public get Culture(): CultureModel {
     return this._culture
   }
-  public set Culture(val: Culture) {
+  public set Culture(val: CultureModel) {
     this._culture = val
   }
 

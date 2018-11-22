@@ -1,4 +1,4 @@
-import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs, UpdateArgs, DeleteArgs } from './Types'
+import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs, UpdateArgs, DeleteArgs, UserGetResponse } from './Types'
 import { Query, Resolver, Args, Mutation, Authorized, Ctx } from 'type-graphql'
 import { OrmInterface, ErrorHelper } from '../../class/App'
 import { sign } from 'jsonwebtoken'
@@ -6,16 +6,14 @@ import { compare } from 'bcrypt'
 import { Context } from 'apollo-server-core'
 import UserModel from './UserModel'
 
-const userOrmInterface = new OrmInterface(UserModel)
-
 @Resolver(UserModel)
 export default class UserController {
+  private _ormInterface = new OrmInterface(UserModel)
+
   //#region GraphQL
   @Query(returns => LoginResponse)
   async login(@Args() { Name, Password } : LoginArgs): Promise<LoginResponse> {
-    const user: UserModel = await userOrmInterface.ComposeQuery({
-      Name
-    }).getOne()
+    const user: UserModel = await this._ormInterface.ComposeQuery({ where: { Name }}).getOne()
     const notFoundError = ErrorHelper.getError('user', 'notfound')
     if (user) {
       if (await compare(Password, user.Password)) {
@@ -39,16 +37,9 @@ export default class UserController {
   }
 
   // @Authorized()
-  @Query(returns => [GetableUser])
-  async users(@Args() { where, last, skip, conditionOperator, orderBy, first, limit }: UserArgs) {
-    return await userOrmInterface.ComposeQuery(where, {
-      first,
-      conditionOperator,
-      orderBy,
-      limit,
-      last,
-      skip
-    }).getMany()
+  @Query(returns => UserGetResponse)
+  async users(@Args() args: UserArgs) {
+    return this._ormInterface.Query(args)
   }
 
   @Mutation(returns => GetableUser)

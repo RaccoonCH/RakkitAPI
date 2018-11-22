@@ -4,10 +4,10 @@ import { Package, Attribute } from '../../decorators'
 import { RId, RShorttext } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
 
-@Package()
+@Package({ name: 'Culture' })
 @ObjectType()
 @Entity({ name: 'Culture' })
-export default class Culture extends BaseEntity {
+export default class CultureModel extends BaseEntity {
   private langCode: string
   private countryCode: string
   private pages: Page[]

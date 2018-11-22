@@ -3,10 +3,10 @@ import { Field, ObjectType, ID } from 'type-graphql'
 import { Attribute, Package } from '../../decorators'
 import { RShorttext, RId } from '../../class/FrontTypes'
 
-@Package()
+@Package({ name: 'Example' })
 @ObjectType()
-@Entity()
-export default class Example extends BaseEntity {
+@Entity({ name: 'Example' })
+export default class ExampleModel extends BaseEntity {
   private _name: string
   private _text: string
 

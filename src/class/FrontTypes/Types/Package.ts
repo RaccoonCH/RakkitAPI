@@ -1,5 +1,5 @@
 export interface IPackage {
-  readonly id: string
+  readonly className: string
   readonly name: string
   readonly attributes: {}
   readonly description?: string
@@ -8,6 +8,7 @@ export interface IPackage {
 }
 
 export interface IPackageParams extends Pick<IPackage, 'description' | 'requiredRole' | 'icon'> {
+  readonly name?: string
   readonly description?: string
   readonly requiredRole?: 'default' | 'admin'
   readonly icon?: string

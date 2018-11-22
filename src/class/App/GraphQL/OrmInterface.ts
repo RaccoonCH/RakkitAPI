@@ -1,15 +1,9 @@
 import { getConnection, ObjectType, SelectQueryBuilder } from 'typeorm'
-import { IRelationQuery, OrderByArgs } from '..'
+import { IRelationQuery, QueryArgs } from '..'
 
 const queryModelName = 'model'
-type ComposeQueryOptions = {
-  relations?: (string | IRelationQuery)[],
-  skip?: number,
-  limit?: number
-  last?: number,
-  first?: number,
-  orderBy?: OrderByArgs,
-  conditionOperator?: 'or' | 'and'
+interface ComposeQueryOptions extends QueryArgs {
+  readonly relations?: (string | IRelationQuery)[]
 }
 
 export class OrmInterface<Entity> {
@@ -40,14 +34,37 @@ export class OrmInterface<Entity> {
     return `${this.getQueryFieldName(subField, mainField)} = :${subField}`
   }
 
+  private parse(items: Object[], count = false) {
+    if (count) {
+      return {
+        items: items[0],
+        count: items[1]
+      }
+    }
+    return { items }
+  }
+
+  public async GetManyAndCount(options?: ComposeQueryOptions) {
+    return this.parse(await this.ComposeQuery(options).getManyAndCount(), true)
+  }
+
+  public async GetMany(options?: ComposeQueryOptions) {
+    return this.parse(await this.ComposeQuery(options).getMany(), false)
+  }
+
+  public Query(options?: ComposeQueryOptions) {
+    if (options.count) {
+      return this.GetManyAndCount(options)
+    }
+    return this.GetMany(options)
+  }
+
   /**
    * Compose a TypeORM query from a GraphQL query
    * @param where The where conditions
    * @param options The other options
    */
-  ComposeQuery(): SelectQueryBuilder<Entity>
-  ComposeQuery(where: Object, options?: ComposeQueryOptions): SelectQueryBuilder<Entity>
-  ComposeQuery(where?: Object, options?: ComposeQueryOptions): SelectQueryBuilder<Entity> {
+  public ComposeQuery(options?: ComposeQueryOptions): SelectQueryBuilder<Entity> {
     const queryBuilder = getConnection().createQueryBuilder(this.Model, queryModelName)
     const relationArgs = new Map()
     let conditionOperator: 'or' | 'and' = 'and'
@@ -64,12 +81,13 @@ export class OrmInterface<Entity> {
         queryBuilder.orderBy(this.getQueryFieldName('Id'), 'ASC')
       }
 
-      if (options.skip && options.limit) {
-        queryBuilder.take(options.limit)
+      if (options.skip !== undefined) {
         queryBuilder.skip(options.skip)
       }
 
-      options.limit && queryBuilder.limit(options.limit)
+      if (options.limit !== undefined) {
+        queryBuilder.take(options.limit)
+      }
 
       if (options.first) {
         queryBuilder.take(options.first)
@@ -153,8 +171,8 @@ export class OrmInterface<Entity> {
         }
       })
     }
-    if (where) {
-      parseObjToQuery(where)
+    if (options.where) {
+      parseObjToQuery(options.where)
     }
 
     return queryBuilder

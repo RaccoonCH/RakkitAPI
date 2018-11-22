@@ -144,7 +144,7 @@ export class Main extends AppLoader {
   public AddRp(rp: IPackage): void {
     this._rps.push({
       ...rp,
-      attributes: this._rpsAttributes.get(rp.id)
+      attributes: this._rpsAttributes.get(rp.className)
     })
   }
 
