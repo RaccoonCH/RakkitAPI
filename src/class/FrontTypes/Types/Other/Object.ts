@@ -1,25 +1,10 @@
-import { IType } from '../..'
+import { Type } from '../..'
 
-export class RObject implements IType {
-  TypeName: string = 'object'
-  IsEditable: boolean
-  IsInHeader: boolean
-  IsSearchable: boolean
-  PlaceOrder: number
-  Placeholder: string
-  PropertyToShow: string
+export class RObject extends Type {
+  public readonly propertyToShow: string
 
-  constructor(
-    propertyToShow: string,
-    isInHeader: boolean = false,
-    isSearchable: boolean = false,
-    isEditable: boolean = true,
-    placeOrder: number = 0
-  ) {
-    this.PropertyToShow = propertyToShow
-    this.IsEditable = isEditable
-    this.IsInHeader = isInHeader
-    this.IsSearchable = isSearchable
-    this.PlaceOrder = placeOrder
+  constructor(propertyToShow?: string) {
+    super('object')
+    this.propertyToShow = propertyToShow
   }
 }

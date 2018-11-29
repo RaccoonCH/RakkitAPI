@@ -1,4 +1,4 @@
-import { GetableUser } from './api/User/Types/GetableUser';
+import { GetableUser } from './api/User/Types/GetableUser'
 import 'reflect-metadata'
 import { config } from 'dotenv'
 import * as Path from 'path'
@@ -12,7 +12,7 @@ import { createServer, Server } from 'http'
 import { Color } from './misc'
 import { ApolloServer } from 'apollo-server-express'
 import { AppLoader } from './class/App'
-import { RPackage, IType } from './class/FrontTypes'
+import { IPackage, Type, TypeParams } from './class/FrontTypes'
 import { GraphQLSchema } from 'graphql'
 
 export class Main extends AppLoader {
@@ -25,8 +25,8 @@ export class Main extends AppLoader {
   private _publicPath: string
   private _apolloServer?: ApolloServer
   private _corsEnabled?: boolean
-  private _rps: RPackage[] = []
-  private _rpsAttributes: Object = {}
+  private _rps: IPackage[] = []
+  private _rpsAttributes: Map<string, Array<TypeParams & Type>> = new Map()
 
   constructor()
   constructor(corsEnabled: boolean)
@@ -141,10 +141,10 @@ export class Main extends AppLoader {
    * Add the rakkitPackage to the RP list to provide it
    * @param rp The RPackage passed in params into the decorator
    */
-  public AddRp(rp: RPackage): void {
+  public AddRp(rp: IPackage): void {
     this._rps.push({
       ...rp,
-      Attributes: this._rpsAttributes[rp.Id]
+      attributes: this._rpsAttributes.get(rp.className)
     })
   }
 
@@ -155,11 +155,19 @@ export class Main extends AppLoader {
    * @param key the property name
    * @param rakkitFrontType the parameter in the decorator parameter
    */
-  public AddRpAttribute(className: string, key: string, rakkitFrontType: IType): void {
-    if (!this._rpsAttributes[className]) {
-      this._rpsAttributes[className] = {}
-    }
-    this._rpsAttributes[className][key] = rakkitFrontType
+  public AddRpAttribute(
+    className: string,
+    key: string,
+    rakkitFrontType: Type,
+    rakkitAttributeParams: TypeParams
+  ): void {
+    const rpAttributes = this._rpsAttributes.get(className) || []
+    rpAttributes.push({
+      name: key,
+      ...rakkitAttributeParams,
+      ...rakkitFrontType
+    })
+    this._rpsAttributes.set(className, rpAttributes)
   }
 }
 

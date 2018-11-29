@@ -1,24 +1,10 @@
-import { IType, IText } from '../..'
+import { Type, IText } from '../..'
 
-export class RLongtext implements IType, IText {
-  TypeName: string = 'text:long'
-  IsEditable: boolean
-  IsInHeader: boolean
-  IsSearchable: boolean
-  PlaceOrder: number
-  Placeholder: string
+export class RLongtext extends Type implements IText {
+  public readonly placeholder: string
 
-  constructor(
-    placeholder: string = null,
-    isInHeader: boolean = false,
-    isSearchable: boolean = false,
-    isEditable: boolean = true,
-    placeOrder: number = 0
-  ) {
-    this.Placeholder = placeholder
-    this.IsEditable = isEditable
-    this.IsInHeader = isInHeader
-    this.IsSearchable = isSearchable
-    this.PlaceOrder = placeOrder
+  constructor(placeholder?: string) {
+    super('long', 'text')
+    this.placeholder = placeholder
   }
 }

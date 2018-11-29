@@ -1,31 +1,21 @@
-import { IType } from '../..'
+import { Type } from '../..'
 
-export class RImage implements IType {
-  TypeName: string = 'object'
-  IsEditable: boolean
-  IsInHeader: boolean
-  IsSearchable: boolean
-  PlaceOrder: number
-  Placeholder: string
-  SizeUnit: string
-  MaxSize: number
-  AcceptedMIME: string[]
+export class RImage extends Type {
+  public readonly placeholder: string
+  public readonly sizeUnit: string
+  public readonly maxSize: number
+  public readonly acceptedMime: string[]
 
   constructor(
-    acceptedMIME: string[],
-    sizeUnit: string,
-    maxSize: number,
-    isInHeader: boolean = false,
-    isSearchable: boolean = false,
-    isEditable: boolean = true,
-    placeOrder: number = 0
+    acceptedMime?: string[],
+    sizeUnit?: string,
+    maxSize?: number,
+    placeholder?: string
   ) {
-    this.AcceptedMIME = acceptedMIME
-    this.SizeUnit = sizeUnit
-    this.MaxSize = maxSize
-    this.IsEditable = isEditable
-    this.IsInHeader = isInHeader
-    this.IsSearchable = isSearchable
-    this.PlaceOrder = placeOrder
+    super('image')
+    this.placeholder = placeholder
+    this.acceptedMime = acceptedMime
+    this.sizeUnit = sizeUnit
+    this.maxSize = maxSize
   }
 }

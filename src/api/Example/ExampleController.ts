@@ -1,12 +1,21 @@
 import ExampleModel from './ExampleModel'
-import { Query, Resolver, FieldResolver, Root } from 'type-graphql'
+import { Query, Resolver, FieldResolver, Root, Args } from 'type-graphql'
+import { ExampleGetResponse, ExampleArgs } from './Types'
+import { OrmInterface } from '../../class/App'
 
 @Resolver(ExampleModel)
 export default class ExampleController {
+  private _ormInterface = new OrmInterface(ExampleModel)
+
   //#region GraphQL
-  @Query(returns => [ExampleModel])
-  async getAllExample() {
-    return ExampleModel.find()
+  @Query(returns => ExampleGetResponse)
+  async examples(@Args() args: ExampleArgs) {
+    return this._ormInterface.Query(args)
+  }
+
+  @Query(returns => String)
+  hello() {
+    return 'okay'
   }
 
   // The @Root refers to the self element instance

@@ -1,14 +1,15 @@
-export class RPackage {
-  Id: string
-  Name: string
-  Description: string
-  RequiredRole: 'default' | 'super'
-  Icon?: string
-  Attributes: {} = {}
+export interface IPackage {
+  readonly className: string
+  readonly name: string
+  readonly attributes: {}
+  readonly description?: string
+  readonly requiredRole?: 'default' | 'admin'
+  readonly icon?: string
+}
 
-  constructor(description: string = null, icon: string = null, requiredRole: 'default' | 'super' = 'default') {
-    this.Description = description || 'A Rakkit package'
-    this.Icon = icon
-    this.RequiredRole = requiredRole
-  }
+export interface IPackageParams extends Pick<IPackage, 'description' | 'requiredRole' | 'icon'> {
+  readonly name?: string
+  readonly description?: string
+  readonly requiredRole?: 'default' | 'admin'
+  readonly icon?: string
 }

@@ -1,13 +1,13 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { ObjectType, Field, ID } from 'type-graphql'
-import { Attribute, Package } from '../../decorators'
-import { RPackage, RId, RShorttext } from '../../class/FrontTypes'
 import { hashSync } from 'bcrypt'
+import { Attribute, Package } from '../../decorators'
+import { RId, RShorttext, RPassword } from '../../class/FrontTypes'
 
-@Package(new RPackage('User package'))
+@Package({ name: 'User', description: 'User package' })
 @ObjectType()
 @Entity({ name: 'User' })
-export default class User extends BaseEntity {
+export default class UserModel extends BaseEntity {
   private _name: string
   private _email: string
   private _role: string
@@ -50,7 +50,7 @@ export default class User extends BaseEntity {
     this._email = val
   }
 
-  @Attribute(new RShorttext())
+  @Attribute(new RPassword())
   @Field()
   @Column()
   public get Password(): string {

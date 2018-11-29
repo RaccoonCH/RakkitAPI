@@ -1,4 +1,4 @@
-import { RPackage, IType } from '../class/FrontTypes'
+import { Type, TypeParams, IPackageParams } from '../class/FrontTypes'
 import { mainInstance } from '../..'
 
 /**
@@ -6,13 +6,17 @@ import { mainInstance } from '../..'
  * It always called after Attribute decorator
  * @param rakkitPackage The RakkitPackage object with informations (description, icon, ...)
  */
-export const Package = (rakkitPackage: RPackage): Function => {
+export const Package = (rakkitPackage?: IPackageParams): Function => {
   return (target: Function): void => {
-    const className = target.name.toLowerCase()
+    let name = target.name
+    if (rakkitPackage && rakkitPackage.name) {
+      name = rakkitPackage.name
+    }
     mainInstance.AddRp({
-      Id: className,
-      Name: target.name,
-      ...rakkitPackage
+      name,
+      className: target.name,
+      ...(rakkitPackage || {}),
+      attributes: []
     })
   }
 }
@@ -23,9 +27,8 @@ export const Package = (rakkitPackage: RPackage): Function => {
  * It always called before Package decorator
  * @param type The front-end type, it describe how the datas will be displayed
  */
-export const Attribute = (type: IType): Function => {
+export const Attribute = (type: Type, params: TypeParams = { isEditable: true, isInHeader: true, isSearchable: false, placeOrder: 0 }): Function => {
   return (target: Object, key: string): void => {
-    const className = target.constructor.name.toLowerCase()
-    mainInstance.AddRpAttribute(className, key, type)
+    mainInstance.AddRpAttribute(target.constructor.name, key, type, params)
   }
 }
