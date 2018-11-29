@@ -4,7 +4,7 @@ export class RObject extends Type {
   public readonly propertyToShow: string
 
   constructor(propertyToShow?: string) {
-    super('other:object')
+    super('object')
     this.propertyToShow = propertyToShow
   }
 }

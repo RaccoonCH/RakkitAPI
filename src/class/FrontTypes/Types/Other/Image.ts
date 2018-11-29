@@ -12,7 +12,7 @@ export class RImage extends Type {
     maxSize?: number,
     placeholder?: string
   ) {
-    super('other:image')
+    super('image')
     this.placeholder = placeholder
     this.acceptedMime = acceptedMime
     this.sizeUnit = sizeUnit

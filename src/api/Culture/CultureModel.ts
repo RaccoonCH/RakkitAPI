@@ -1,14 +1,13 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { ObjectType, Field, ID, InputType } from 'type-graphql'
+import { ObjectType, Field, ID } from 'type-graphql'
 import { Package, Attribute } from '../../decorators'
-import  { RPackage, RId, RShorttext } from '../../class/FrontTypes'
+import { RId, RShorttext } from '../../class/FrontTypes'
 import Page from '../Page/PageModel'
-import Example from '../Example/ExampleModel'
 
-@Package(new RPackage())
+@Package({ name: 'Culture' })
 @ObjectType()
 @Entity({ name: 'Culture' })
-export default class Culture extends BaseEntity {
+export default class CultureModel extends BaseEntity {
   private langCode: string
   private countryCode: string
   private pages: Page[]
@@ -38,7 +37,7 @@ export default class Culture extends BaseEntity {
     this.countryCode = val
   }
 
-  @Attribute(new RShorttext(null, true, true, false))
+  @Attribute(new RShorttext())
   @Field({ nullable: true })
   public get CultureInfo(): string {
     return `${this.langCode.toLowerCase()}-${this.countryCode.toUpperCase()}`

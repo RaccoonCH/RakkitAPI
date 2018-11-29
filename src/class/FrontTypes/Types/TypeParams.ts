@@ -1,6 +1,7 @@
 export interface TypeParams {
-  readonly isEditable: boolean
-  readonly isInHeader: boolean
-  readonly isSearchable: boolean
-  readonly placeOrder: number
+  readonly name?: string
+  readonly isEditable?: boolean
+  readonly isInHeader?: boolean
+  readonly isSearchable?: boolean
+  readonly placeOrder?: number
 }

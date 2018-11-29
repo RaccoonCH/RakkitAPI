@@ -4,7 +4,7 @@ export class RHtml extends Type implements IText {
   public readonly placeholder: string
 
   constructor(placeholder?: string) {
-    super('text:json')
+    super('html', 'text')
     this.placeholder = placeholder
   }
 }
