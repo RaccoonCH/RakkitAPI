@@ -13,7 +13,8 @@ import { Color } from './misc'
 import { ApolloServer } from 'apollo-server-express'
 import { AppLoader } from './class/App'
 import { IPackage, Type, TypeParams } from './class/FrontTypes'
-import { GraphQLSchema } from 'graphql'
+import { GraphQLSchema, subscribe, execute } from 'graphql'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
 
 export class Main extends AppLoader {
   private _host: string
@@ -21,8 +22,9 @@ export class Main extends AppLoader {
   private _restEndpoint: string
   private _graphqlEndpoint: string
   private _expressApp: Express.Express
-  private _httpServer: Server
   private _publicPath: string
+  private _subscriptionServer: SubscriptionServer
+  private _httpServer: Server
   private _apolloServer?: ApolloServer
   private _corsEnabled?: boolean
   private _rps: IPackage[] = []
@@ -110,6 +112,9 @@ export class Main extends AppLoader {
       })
       this._apolloServer = new ApolloServer({
         schema,
+        subscriptions: {
+          path: this._graphqlEndpoint
+        },
         context: ({ req }) => {
           return {
             req,
@@ -121,6 +126,16 @@ export class Main extends AppLoader {
         app: this._expressApp,
         path: this._graphqlEndpoint
       })
+
+      this._subscriptionServer = new SubscriptionServer({
+        execute,
+        subscribe,
+        schema
+      }, {
+        server: this._httpServer,
+        path: this._graphqlEndpoint
+      })
+
       console.log(Color(
         `\nGraphQL:  Started on http://${this._host}:${this._port}${this._apolloServer.graphqlPath}`,
         'fg.black', 'bg.green'
