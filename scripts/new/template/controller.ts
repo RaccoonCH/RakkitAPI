@@ -11,8 +11,8 @@ export default class _CONTROLLER_ {
   //#endregion
 
   //#region REST
-  static async getAll(req, res) {
-    res.send(await _MODEL_FILE_.find())
+  static async hello(req, res) {
+    res.send('hello')
   }
   //#endregion
 }

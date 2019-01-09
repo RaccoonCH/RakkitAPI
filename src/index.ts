@@ -1,12 +1,12 @@
-import { GetableUser } from './api/User/Types/GetableUser'
 import 'reflect-metadata'
-import { config } from 'dotenv'
 import * as Path from 'path'
 import * as Express from 'express'
 import * as BodyParser from 'body-parser'
 import * as Cors from 'cors'
 import * as TypeGraphQL from 'type-graphql'
 import * as jwt from 'express-jwt'
+import { GetableUser } from './api/User/Types/GetableUser'
+import { config } from 'dotenv'
 import { getConnectionOptions, createConnection } from 'typeorm'
 import { createServer, Server } from 'http'
 import { Color } from './misc'
@@ -15,6 +15,9 @@ import { AppLoader } from './class/App'
 import { IPackage, Type, TypeParams } from './class/FrontTypes'
 import { GraphQLSchema, subscribe, execute } from 'graphql'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
+import { IMain } from './class/Types'
+
+config({ path: '../.env' })
 
 export class Main extends AppLoader {
   private _host: string
@@ -29,26 +32,20 @@ export class Main extends AppLoader {
   private _corsEnabled?: boolean
   private _rps: IPackage[] = []
   private _rpsAttributes: Map<string, Array<TypeParams & Type>> = new Map()
+  private static _instance: Main
 
-  constructor()
-  constructor(corsEnabled: boolean)
-  constructor(corsEnabled: boolean, host: string, port: number, publicPath: string, apiPath: string, apiEndpoint: string, graphqlEndpoint: string)
-  constructor(
-    corsEnabled?: boolean,
-    host?: string,
-    port?: number,
-    publicPath?: string,
-    apiPath?: string,
-    restEndpoint?: string,
-    graphqlEndpoint?: string
-  ) {
-    super(apiPath || Path.join(__dirname, 'api'))
-    this._corsEnabled = corsEnabled || true
-    this._host = host || 'localhost'
-    this._port = port || 4000
-    this._restEndpoint = restEndpoint || '/rest'
-    this._graphqlEndpoint = graphqlEndpoint || '/gql'
-    this._publicPath = publicPath || Path.join(__dirname, '../public')
+  public static get Instance(): Main {
+    return this._instance
+  }
+
+  private constructor(params: IMain) {
+    super(params.apiPath || Path.join(__dirname, 'api'))
+    this._corsEnabled = params.corsEnabled || true
+    this._host = params.host || 'localhost'
+    this._port = params.port || 4000
+    this._restEndpoint = params.restEndpoint || '/rest'
+    this._graphqlEndpoint = params.graphqlEndpoint || '/gql'
+    this._publicPath = params.publicPath || Path.join(__dirname, '../public')
     this._expressApp = Express()
     this._httpServer = createServer(this._expressApp)
   }
@@ -56,19 +53,33 @@ export class Main extends AppLoader {
   /**
    * Start the application (Express, GraphQL, ...)
    */
-  async Start(): Promise<void> {
+  public static async start(params?: IMain): Promise<Main> {
+    if (!this.Instance) {
+      this._instance = new Main(params || {})
+    }
     try {
       // Get ormconfig.ts file content and create the connection to the database
       await createConnection(await getConnectionOptions())
+      // Start Rest service and GraphQL
+      await this.Instance.startAllServices()
+    } catch (err) {
+      console.log(err)
+    }
+    return this.Instance
+  }
 
+  private async startAllServices(): Promise<Main> {
+    await this.startRest()
+    await this.startGraphQl()
+    return this
+  }
+
+  private async startRest(): Promise<Main> {
+    return new Promise((resolve, reject) => {
       // Load the application (all RakkitPackage)
       this.Load()
       this.ExpressRouter.use('/', (req, res) => {
-        if (this.RpNames.length === this._rps.length) {
-          res.send(this._rps)
-        } else {
-          res.status(404).send('loading')
-        }
+        res.send(this._rps)
       })
 
       if (this._corsEnabled) {
@@ -98,69 +109,80 @@ export class Main extends AppLoader {
         }
       })
 
-      // Build TypeGraphQL schema to use it
-      const schema: GraphQLSchema = await TypeGraphQL.buildSchema({
-        resolvers: this.Resolvers,
-        authChecker: ({ context }, roles) =>  {
-          const user: GetableUser = context.req.user
-          if (user) {
-            const authorizedRole: Array<string> = (roles.length <= 0 ? [ process.env.DefaultRequiredRole ] : roles)
-            return authorizedRole.includes(user.Role)
-          }
-          return false
-        }
-      })
-      this._apolloServer = new ApolloServer({
-        schema,
-        subscriptions: {
-          path: this._graphqlEndpoint
-        },
-        context: ({ req }) => {
-          return {
-            req,
-            user: req.user // from express-jwt
-          }
-        }
-      })
-      this._apolloServer.applyMiddleware({
-        app: this._expressApp,
-        path: this._graphqlEndpoint
-      })
-
-      this._subscriptionServer = new SubscriptionServer({
-        execute,
-        subscribe,
-        schema
-      }, {
-        server: this._httpServer,
-        path: this._graphqlEndpoint
-      })
-
-      console.log(Color(
-        `\nGraphQL:  Started on http://${this._host}:${this._port}${this._apolloServer.graphqlPath}`,
-        'fg.black', 'bg.green'
-      ))
-
       this._httpServer.listen(this._port, this._host, () => {
         console.log(Color(
-          `REST:     Started on http://${this._host}:${this._port}${this._restEndpoint}\n`,
+          `REST:     Started on http://${this._host}:${this._port}${this._restEndpoint}`,
           'fg.black', 'bg.green'
         ))
+        resolve(this)
       })
-    } catch (err) {
-      console.log(err)
-    }
+    })
+  }
+
+  private async startGraphQl(): Promise<Main> {
+    // Build TypeGraphQL schema to use it
+    const schema: GraphQLSchema = await TypeGraphQL.buildSchema({
+      resolvers: this.Resolvers,
+      authChecker: ({ context }, roles) =>  {
+        const user: GetableUser = context.req.user
+        if (user) {
+          const authorizedRole: Array<string> = (roles.length <= 0 ? [ process.env.DefaultRequiredRole ] : roles)
+          return authorizedRole.includes(user.Role)
+        }
+        return false
+      }
+    })
+    this._apolloServer = new ApolloServer({
+      schema,
+      subscriptions: {
+        path: this._graphqlEndpoint
+      },
+      context: ({ req }) => {
+        return {
+          req,
+          user: req.user // from express-jwt
+        }
+      }
+    })
+    this._apolloServer.applyMiddleware({
+      app: this._expressApp,
+      path: this._graphqlEndpoint
+    })
+
+    this._subscriptionServer = new SubscriptionServer({
+      execute,
+      subscribe,
+      schema
+    }, {
+      server: this._httpServer,
+      path: this._graphqlEndpoint
+    })
+
+    console.log(Color(
+      `GraphQL:  Started on http://${this._host}:${this._port}${this._apolloServer.graphqlPath}\n`,
+      'fg.black', 'bg.green'
+    ))
+
+    return this
+  }
+
+  /**
+   * Restart REST and GraphQL service
+   */
+  public async Restart() {
+    return this.startAllServices()
   }
 
   /**
    * Add the rakkitPackage to the RP list to provide it
    * @param rp The RPackage passed in params into the decorator
    */
-  public AddRp(rp: IPackage): void {
+  public AddRp(rp: IPackage): Main {
     this._rps.push({
       ...rp,
       attributes: this._rpsAttributes.get(rp.className)
     })
+    return this
   }
 
   /**
@@ -175,7 +197,7 @@ export class Main extends AppLoader {
     key: string,
     rakkitFrontType: Type,
     rakkitAttributeParams: TypeParams
-  ): void {
+  ): Main {
     const rpAttributes = this._rpsAttributes.get(className) || []
     rpAttributes.push({
       name: key,
@@ -183,10 +205,8 @@ export class Main extends AppLoader {
       ...rakkitFrontType
     })
     this._rpsAttributes.set(className, rpAttributes)
+    return this
   }
 }
 
-config({ path: '../.env' })
-
-export const mainInstance = new Main()
-mainInstance.Start()
+Main.start()
