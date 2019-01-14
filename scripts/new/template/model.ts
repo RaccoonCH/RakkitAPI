@@ -1,9 +1,9 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { ObjectType, Field, ID } from 'type-graphql'
 import { Attribute, Package } from '../../decorators'
-import { RPackage, RId, RShorttext } from '../../class/FrontTypes'
+import { RId, RShorttext } from '../../class/FrontTypes'
 
-@Package(new RPackage('_MODEL_ package'))
+@Package()
 @ObjectType()
 @Entity({ name: '_MODEL_' })
 export default class _MODEL_ extends BaseEntity {

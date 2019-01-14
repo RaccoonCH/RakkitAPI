@@ -1,6 +1,7 @@
 export * from './GraphQL/IRelationQuery'
 export * from './GraphQL/QueryArgs'
 export * from './GraphQL/OrmInterface'
+export * from './GraphQL/GraphqlUtils'
 
 export * from './Routing/Middleware'
 export * from './Routing/Router'

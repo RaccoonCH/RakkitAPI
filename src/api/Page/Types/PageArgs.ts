@@ -1,7 +1,7 @@
 import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs } from '../../../class/App'
-import PageModel from '../PageModel'
+import { QueryArgs, GraphqlUtils } from '../../../class/App'
 import { CultureType } from '../../Culture/Types'
+import PageModel from '../PageModel'
 
 @InputType()
 export class PageType implements Pick<PageModel, 'Url' | 'Title'> {
@@ -16,7 +16,4 @@ export class PageType implements Pick<PageModel, 'Url' | 'Title'> {
 }
 
 @ArgsType()
-export class PageArgs extends QueryArgs {
-  @Field(type => PageType, { nullable: true })
-  where: PageType
-}
+export class PageArgs extends GraphqlUtils.createArgsClass(PageType) {}
