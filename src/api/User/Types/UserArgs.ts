@@ -1,5 +1,5 @@
 import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs } from '../../../class/App'
+import { GraphqlUtils } from '../../../class/App'
 import UserModel from '../UserModel'
 
 @InputType()
@@ -18,7 +18,4 @@ export class UserType implements Pick<UserModel, 'Id' | 'Name' | 'Email' | 'Role
 }
 
 @ArgsType()
-export class UserArgs extends QueryArgs {
-  @Field(type => UserType, { nullable: true })
-  where: UserType
-}
+export class UserArgs extends GraphqlUtils.createArgsClass(UserType) {}

@@ -1,5 +1,5 @@
-import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs } from '../../../class/App'
+import { ArgsType, InputType, Field } from 'type-graphql'
+import { GraphqlUtils } from '../../../class/App'
 import ExampleModel from '../ExampleModel'
 
 @InputType()
@@ -9,7 +9,4 @@ export class ExampleType implements Pick<ExampleModel, 'Name'> {
 }
 
 @ArgsType()
-export class ExampleArgs extends QueryArgs {
-  @Field(type => ExampleType, { nullable: true })
-  where: ExampleType
-}
+export class ExampleArgs extends GraphqlUtils.createArgsClass(ExampleType) {}

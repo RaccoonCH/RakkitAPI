@@ -11,7 +11,7 @@ export abstract class OrderByArgs {
 
 @ArgsType()
 export abstract class QueryArgs {
-  abstract readonly where
+  abstract readonly where?
 
   @Field({ nullable: true })
   readonly count?: boolean

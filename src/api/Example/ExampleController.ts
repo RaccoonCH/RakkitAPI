@@ -1,6 +1,6 @@
 import ExampleModel from './ExampleModel'
-import { Query, Resolver, FieldResolver, Root, Args, Subscription, PubSub } from 'type-graphql'
-import { ExampleGetResponse, ExampleArgs, Notif } from './Types'
+import { Query, Resolver, FieldResolver, Root, Args, Subscription, PubSub, ClassType } from 'type-graphql'
+import { ExampleGetResponse, Notif, ExampleArgs } from './Types'
 import { OrmInterface } from '../../class/App'
 import { PubSubEngine } from 'graphql-subscriptions'
 
