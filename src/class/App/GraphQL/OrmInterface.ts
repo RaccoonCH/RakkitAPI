@@ -1,3 +1,4 @@
+import { Field, ArgsType, ClassType } from 'type-graphql'
 import { getConnection, ObjectType, SelectQueryBuilder } from 'typeorm'
 import { IRelationQuery, QueryArgs } from '..'
 

@@ -1,10 +1,11 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
-import { Field, ObjectType, ID } from 'type-graphql'
+import { Field, ObjectType, ID, InputType } from 'type-graphql'
 import { Attribute, Package } from '../../decorators'
 import { RShorttext, RId } from '../../class/FrontTypes'
 
 @Package({ name: 'Example' })
 @ObjectType()
+@InputType('ExmapleInput')
 @Entity({ name: 'Example' })
 export default class ExampleModel extends BaseEntity {
   private _name: string

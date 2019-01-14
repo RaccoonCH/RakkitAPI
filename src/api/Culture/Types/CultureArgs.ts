@@ -1,5 +1,5 @@
 import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs } from '../../../class/App'
+import { GraphqlUtils } from '../../../class/App'
 import CultureModel from '../CultureModel'
 
 @InputType()
@@ -12,7 +12,4 @@ export class CultureType implements Pick<CultureModel, 'LangCode' | 'CountryCode
 }
 
 @ArgsType()
-export class CultureArgs extends QueryArgs {
-  @Field(type => CultureType, { nullable: true })
-  where: CultureType
-}
+export class CultureArgs extends GraphqlUtils.createArgsClass(CultureType) {}

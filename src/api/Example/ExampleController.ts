@@ -1,7 +1,8 @@
 import ExampleModel from './ExampleModel'
-import { Query, Resolver, FieldResolver, Root, Args } from 'type-graphql'
-import { ExampleGetResponse, ExampleArgs } from './Types'
+import { Query, Resolver, FieldResolver, Root, Args, Subscription, PubSub, ClassType } from 'type-graphql'
+import { ExampleGetResponse, Notif, ExampleArgs } from './Types'
 import { OrmInterface } from '../../class/App'
+import { PubSubEngine } from 'graphql-subscriptions'
 
 @Resolver(ExampleModel)
 export default class ExampleController {
@@ -14,8 +15,18 @@ export default class ExampleController {
   }
 
   @Query(returns => String)
-  hello() {
+  async hello(@PubSub() pubSub: PubSubEngine) {
+    await pubSub.publish('EXAMPLE_SUB', {})
     return 'okay'
+  }
+
+  @Subscription({
+    topics: 'EXAMPLE_SUB'
+  })
+  exampleSub(@Root() notificationPayload: Object): Notif {
+    return {
+      date: new Date()
+    }
   }
 
   // The @Root refers to the self element instance

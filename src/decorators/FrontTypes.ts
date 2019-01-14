@@ -1,5 +1,5 @@
 import { Type, TypeParams, IPackageParams } from '../class/FrontTypes'
-import { mainInstance } from '../..'
+import { Main } from '../..'
 
 /**
  * Declare a RakkitPackge to show into front-end
@@ -12,7 +12,7 @@ export const Package = (rakkitPackage?: IPackageParams): Function => {
     if (rakkitPackage && rakkitPackage.name) {
       name = rakkitPackage.name
     }
-    mainInstance.AddRp({
+    Main.Instance.AddRp({
       name,
       className: target.name,
       ...(rakkitPackage || {}),
@@ -29,6 +29,6 @@ export const Package = (rakkitPackage?: IPackageParams): Function => {
  */
 export const Attribute = (type: Type, params: TypeParams = { isEditable: true, isInHeader: true, isSearchable: false, placeOrder: 0 }): Function => {
   return (target: Object, key: string): void => {
-    mainInstance.AddRpAttribute(target.constructor.name, key, type, params)
+    Main.Instance.AddRpAttribute(target.constructor.name, key, type, params)
   }
 }
