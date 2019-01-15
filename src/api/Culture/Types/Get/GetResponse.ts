@@ -1,11 +1,12 @@
-import { ObjectType, Field } from 'type-graphql'
-import CultureModel from '../../CultureModel'
+import { IGetResponse } from "@types";
+import { ObjectType, Field } from "type-graphql";
+import CultureModel from "@api/Culture/CultureModel";
 
 @ObjectType()
-export class CultureGetResponse {
-  @Field({ nullable: true })
-  count?: number
+export class CultureGetResponse implements IGetResponse {
+  @Field()
+  readonly count: number;
 
   @Field(type => [CultureModel])
-  items: Array<CultureModel>
+  readonly items: CultureModel[];
 }

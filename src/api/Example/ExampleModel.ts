@@ -1,49 +1,44 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm'
-import { Field, ObjectType, ID, InputType } from 'type-graphql'
-import { Attribute, Package } from '../../decorators'
-import { RShorttext, RId } from '../../class/FrontTypes'
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Field, ObjectType, ID, InputType } from "type-graphql";
+import { Attribute, Package } from "@decorators";
+import { RShorttext, RId } from "@types";
 
-@Package({ name: 'Example' })
+@Package({ name: "Example" })
 @ObjectType()
-@InputType('ExmapleInput')
-@Entity({ name: 'Example' })
+@InputType("ExmapleInput")
+@Entity({ name: "Example" })
 export default class ExampleModel extends BaseEntity {
-  private _name: string
-  private _text: string
+  private _name: string;
+  private _text: string;
 
   constructor (name: string, text: string) {
-    super()
-    this.Name = name
-    this.Text = text
+    super();
+    this.Name = name;
+    this.Text = text;
   }
 
   @Attribute(new RId())
-  @Field(type => ID)
+  @Field(type => ID, { nullable: true })
   @PrimaryGeneratedColumn()
-  public readonly Id: number
+  readonly Id: number;
 
   @Attribute(new RShorttext())
-  @Field()
+  @Field({ nullable: true })
   @Column()
-  public get Name(): string {
-    return this._name
+  get Name(): string {
+    return this._name;
   }
-  public set Name(val: string) {
-    this._name = val
+  set Name(val: string) {
+    this._name = val;
   }
 
   @Attribute(new RShorttext())
-  @Field()
+  @Field({ nullable: true })
   @Column()
-  public get Text(): string {
-    return this._text
+  get Text(): string {
+    return this._text;
   }
-  public set Text(val: string) {
-    this._text = val
-  }
-
-  @Field()
-  public get nameToUppercase(): string {
-    return this.Name.toUpperCase()
+  set Text(val: string) {
+    this._text = val;
   }
 }

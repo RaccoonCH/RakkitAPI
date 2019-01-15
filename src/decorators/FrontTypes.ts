@@ -1,5 +1,5 @@
-import { Type, TypeParams, IPackageParams } from '../class/FrontTypes'
-import { Main } from '../..'
+import { FrontType, TypeParams, IPackageParams } from "@types";
+import { Main } from "@main";
 
 /**
  * Declare a RakkitPackge to show into front-end
@@ -8,18 +8,18 @@ import { Main } from '../..'
  */
 export const Package = (rakkitPackage?: IPackageParams): Function => {
   return (target: Function): void => {
-    let name = target.name
+    let name = target.name;
     if (rakkitPackage && rakkitPackage.name) {
-      name = rakkitPackage.name
+      name = rakkitPackage.name;
     }
     Main.Instance.AddRp({
       name,
       className: target.name,
       ...(rakkitPackage || {}),
       attributes: []
-    })
-  }
-}
+    });
+  };
+};
 
 /**
  * Pupulate the attributes into an object,
@@ -27,8 +27,16 @@ export const Package = (rakkitPackage?: IPackageParams): Function => {
  * It always called before Package decorator
  * @param type The front-end type, it describe how the datas will be displayed
  */
-export const Attribute = (type: Type, params: TypeParams = { isEditable: true, isInHeader: true, isSearchable: false, placeOrder: 0 }): Function => {
-  return (target: Object, key: string): void => {
-    Main.Instance.AddRpAttribute(target.constructor.name, key, type, params)
+export const Attribute = (
+  type: FrontType,
+  params: TypeParams = {
+    isEditable: true,
+    isInHeader: true,
+    isSearchable: false,
+    placeOrder: 0
   }
-}
+): Function => {
+  return (target: Object, key: string): void => {
+    Main.Instance.AddRpAttribute(target.constructor.name, key, type, params);
+  };
+};

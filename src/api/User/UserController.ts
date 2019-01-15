@@ -1,20 +1,21 @@
-import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs, UpdateArgs, DeleteArgs, UserGetResponse } from './Types'
-import { Query, Resolver, Args, Mutation, Authorized, Ctx } from 'type-graphql'
-import { OrmInterface, ErrorHelper } from '../../class/App'
-import { sign } from 'jsonwebtoken'
-import { compare } from 'bcrypt'
-import { Context } from 'apollo-server-core'
-import UserModel from './UserModel'
+import { LoginArgs, LoginResponse, GetableUser, RegisterArgs, UserArgs, UpdateArgs, DeleteArgs, UserGetResponse } from "./Types";
+import { Query, Resolver, Args, Mutation, Authorized, Ctx } from "type-graphql";
+import { Context } from "apollo-server-core";
+import { sign } from "jsonwebtoken";
+import { compare } from "bcrypt";
+import { OrmInterface, ErrorHelper } from "@logic";
+import { config } from "@config";
+import UserModel from "./UserModel";
 
 @Resolver(UserModel)
 export default class UserController {
-  private _ormInterface = new OrmInterface(UserModel)
+  private _ormInterface = new OrmInterface(UserModel);
 
   //#region GraphQL
   @Query(returns => LoginResponse)
   async login(@Args() { Name, Password } : LoginArgs): Promise<LoginResponse> {
-    const user: UserModel = await this._ormInterface.ComposeQuery({ where: { Name }}).getOne()
-    const notFoundError = ErrorHelper.getError('user', 'notfound')
+    const user: UserModel = await this._ormInterface.ComposeQuery({ where: { Name }}).getOne();
+    const notFoundError = ErrorHelper.getError("user", "notfound");
     if (user) {
       if (await compare(Password, user.Password)) {
         // Send the JWT Token
@@ -23,41 +24,41 @@ export default class UserController {
           Name: user.Name,
           Email: user.Email,
           Role: user.Role
-        }, process.env.SecretKey)
+        }, config.secret);
         return {
           Token: token,
           User: new GetableUser(user)
-        }
+        };
       } else {
-        throw new Error(notFoundError)
+        throw new Error(notFoundError);
       }
     } else {
-      throw new Error(notFoundError)
+      throw new Error(notFoundError);
     }
   }
 
   // @Authorized()
   @Query(returns => UserGetResponse)
   async users(@Args() args: UserArgs) {
-    return this._ormInterface.Query(args)
+    return this._ormInterface.Query(args);
   }
 
   @Mutation(returns => GetableUser)
   async register(@Args() { Name, Email, Password, Confirm }: RegisterArgs): Promise<GetableUser> {
     if (Name && Email && Password && Confirm) {
-      const user = new UserModel(Name, Email, Password, Confirm)
+      const user = new UserModel(Name, Email, Password, Confirm);
       try {
-        await user.save()
-        return new GetableUser(user)
+        await user.save();
+        return new GetableUser(user);
       } catch (err) {
         if (err.code === ErrorHelper.duplicateError) {
-          throw new Error(ErrorHelper.getError('user', 'exists'))
+          throw new Error(ErrorHelper.getError("user", "exists"));
         } else {
-          throw new Error(ErrorHelper.getError('server', 'error'))
+          throw new Error(ErrorHelper.getError("server", "error"));
         }
       }
     } else {
-      throw new Error(ErrorHelper.getError('input', 'fill'))
+      throw new Error(ErrorHelper.getError("input", "fill"));
     }
   }
 
@@ -65,10 +66,10 @@ export default class UserController {
   @Mutation(returns => String)
   async deleteUser(@Args() { Id } : DeleteArgs) {
     try {
-      await UserModel.delete(Id)
-      return 'ok'
+      await UserModel.delete(Id);
+      return "ok";
     } catch (err) {
-      throw new Error(ErrorHelper.getError('db', 'error'))
+      throw new Error(ErrorHelper.getError("db", "error"));
     }
   }
 
@@ -77,29 +78,29 @@ export default class UserController {
     @Args() { Id, Email, Name, Role, Password, Confirm } : UpdateArgs,
     @Ctx() context: Context
   ) {
-    const loggedUser: GetableUser = context.user
+    const loggedUser: GetableUser = context.user;
     if (loggedUser.Role === process.env.DefaultRequiredRole || loggedUser.Id === Id) {
       if (Id && Email && Name && Role && Password && Confirm) {
-        const newUser = new UserModel(Name, Email, Password, Confirm, Role)
+        const newUser = new UserModel(Name, Email, Password, Confirm, Role);
         try {
-          const userToUpdate = await UserModel.findOne(Id)
+          const userToUpdate = await UserModel.findOne(Id);
           // Cannot set role if you are not admin
           if (userToUpdate.Role !== process.env.DefaultRequiredRole) {
-            newUser.Role = userToUpdate.Role
+            newUser.Role = userToUpdate.Role;
           }
-          return await UserModel.save(UserModel.merge(userToUpdate, newUser))
+          return await UserModel.save(UserModel.merge(userToUpdate, newUser));
         } catch (err) {
           if (err.code === ErrorHelper.duplicateError) {
-            throw new Error(ErrorHelper.getError('user', 'exist'))
+            throw new Error(ErrorHelper.getError("user", "exist"));
           } else {
-            throw new Error(ErrorHelper.getError('server', 'error'))
+            throw new Error(ErrorHelper.getError("server", "error"));
           }
         }
       } else {
-        throw new Error(ErrorHelper.getError('input', 'fill'))
+        throw new Error(ErrorHelper.getError("input", "fill"));
       }
     } else {
-      throw new Error(ErrorHelper.getError('server', 'unauthorized'))
+      throw new Error(ErrorHelper.getError("server", "unauthorized"));
     }
   }
   //#endregion

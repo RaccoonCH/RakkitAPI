@@ -1,18 +1,18 @@
-import { ArgsType, Field, InputType } from 'type-graphql'
-import { QueryArgs, GraphqlUtils } from '../../../class/App'
-import { CultureType } from '../../Culture/Types'
-import PageModel from '../PageModel'
+import { ArgsType, Field, InputType } from "type-graphql";
+import { GraphqlUtils } from "@logic";
+import { CultureType } from "@api/Culture/Types";
+import PageModel from "../PageModel";
 
 @InputType()
-export class PageType implements Pick<PageModel, 'Url' | 'Title'> {
+export class PageType implements Pick<PageModel, "Url" | "Title"> {
   @Field({ nullable: true })
-  public readonly Url: string
+  readonly Url: string;
 
   @Field({ nullable: true })
-  public readonly Title: string
+  readonly Title: string;
 
   @Field(type => CultureType, { nullable: true })
-  public readonly Culture: CultureType
+  readonly Culture: CultureType;
 }
 
 @ArgsType()

@@ -1,17 +1,17 @@
-import UserModel from '../../UserModel'
-import { ArgsType, Field, InputType } from 'type-graphql'
+import { ArgsType, Field } from "type-graphql";
+import UserModel from "../../UserModel";
 
 @ArgsType()
-export class RegisterArgs implements Pick<UserModel, 'Name' | 'Email' | 'Password'> {
+export class RegisterArgs implements Pick<UserModel, "Name" | "Email" | "Password"> {
   @Field()
-  Name: string
+  Name: string;
 
   @Field()
-  Email: string
+  Email: string;
 
   @Field()
-  Password: string
+  Password: string;
 
   @Field()
-  Confirm: string
+  Confirm: string;
 }

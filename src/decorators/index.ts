@@ -1,1 +1,1 @@
-export * from './FrontTypes'
+export * from "./FrontTypes";

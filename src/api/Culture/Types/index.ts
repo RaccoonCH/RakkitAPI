@@ -1,2 +1,2 @@
-export * from './CultureArgs'
-export * from './Get/GetResponse'
+export * from "./CultureArgs";
+export * from "./Get/GetResponse";

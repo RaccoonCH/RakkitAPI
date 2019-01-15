@@ -11,12 +11,20 @@
       "dom",
       "es7",
       "esnext.asynciterable"
-    ]
+    ],
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@logic": ["src/logic/index"],
+      "@types": ["src/types/index"],
+      "@decorators": ["src/decorators/index"],
+      "@misc": ["src/misc/index"],
+      "@api/*": ["src/api/*"],
+      "@main": ["src/Main"],
+      "@config": ["RakkitConfig"]
+    }
   },
   "exclude": [
     "node_modules"
-  ],
-  "include": [
-    "src/**/*.ts"
   ]
 }

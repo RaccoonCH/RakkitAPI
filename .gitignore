@@ -1,4 +1,8 @@
-node_modules/
-.vscode/
-build/
+.vscode
+.idea
+.vs
+node_modules
+build
+npm-debug.log
 yarn-error.log
+yarn.lock
