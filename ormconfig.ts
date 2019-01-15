@@ -1,13 +1,13 @@
 module.exports = {
-  name: 'default',
-  type: 'mysql',
-  host: 'localhost',
+  name: "default",
+  type: "mysql",
+  host: "localhost",
   port: 3306,
-  username: 'root',
-  password: '',
-  database: 'rakkit',
+  username: "root",
+  password: "",
+  database: "rakkit",
   synchronize: false,
   entities: [
     `${__dirname}/src/api/*/*Model.ts`
   ]
-}
+};

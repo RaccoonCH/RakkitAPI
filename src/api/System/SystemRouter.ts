@@ -1,6 +1,6 @@
-import SystemController from './SystemController'
-import { Router, Route } from '../../class/App'
+import { Router, Route } from "@logic";
+import SystemController from "./SystemController";
 
 export default new Router([
-  new Route('get', '/restart', SystemController.restart)
-])
+  new Route("get", "/restart", SystemController.restart)
+]);

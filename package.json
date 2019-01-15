@@ -2,12 +2,12 @@
   "name": "rakkit_api",
   "version": "1.0.0",
   "description": "The Rakkit API",
-  "main": "src/index.ts",
+  "main": "src/Main.ts",
   "author": "Raccoon SARL",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node -r tsconfig-paths/register src/Main.ts",
     "dev": "nodemon",
     "new:rp": "ts-node scripts/new",
     "test": "jest --config jest.config.json --detectOpenHandles"
@@ -17,16 +17,14 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
-    "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "graphql-subscriptions": "^1.0.0",
     "jsonwebtoken": "^8.3.0",
-    "lodash": "^4.17.11",
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
     "subscriptions-transport-ws": "^0.9.15",
-    "type-graphql": "^0.15.0",
+    "type-graphql": "^0.16.0",
     "typeorm": "^0.2.8"
   },
   "devDependencies": {
@@ -36,13 +34,13 @@
     "@types/express-jwt": "^0.0.40",
     "@types/jest": "^23.3.7",
     "@types/jsonwebtoken": "^7.2.8",
-    "@types/lodash": "^4.14.117",
     "@types/node": "^10.11.3",
     "jest": "^23.6.0",
     "nodemon": "^1.18.4",
     "ts-jest": "^23.10.4",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
+    "tsconfig-paths": "^3.7.0",
+    "tslint": "^5.12.1",
     "typescript": "^3.1.3"
   }
 }

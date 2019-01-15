@@ -4,6 +4,34 @@
     "no-var-keyword": true,
     "object-literal-shorthand": true,
     "object-shorthand-properties-first": true,
+    "unified-signatures": false,
+    "adjacent-overload-signatures": true,
+    "member-access": [true, "no-public"],"member-ordering": [
+      false,
+      {
+        "order": [
+          "public-static-field",
+          "protected-static-field",
+          "private-static-field",
+
+          "public-instance-field",
+          "protected-instance-field",
+          "private-instance-field",
+
+          "public-static-method",
+          "protected-static-method",
+          "private-static-method",
+
+          "public-constructor",
+          "protected-constructor",
+          "private-constructor",
+
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
+        ]
+      }
+    ],
     "object-literal-key-quotes": [
       true,
       "as-needed"
@@ -11,7 +39,7 @@
     "prefer-array-literal": true,
     "quotemark": [
       true,
-      "single",
+      "double",
       "avoid-escape",
       "avoid-template",
       "jsx-double"
@@ -101,11 +129,26 @@
       true,
       150
     ],
-    "block-spacing": true,
-    "ter-computed-property-spacing": true,
-    "ter-func-call-spacing": true,
-    "no-trailing-whitespace": true,
-    "no-consecutive-blank-lines": true,
+    "block-spacing": [
+      true,
+      "always"
+    ],
+    "ter-computed-property-spacing": [
+      true,
+      "always"
+    ],
+    "ter-func-call-spacing": [
+      true,
+      "always"
+    ],
+    "no-trailing-whitespace": [
+      true,
+      "always"
+    ],
+    "no-consecutive-blank-lines": [
+      true,
+      "always"
+    ],
     "trailing-comma": [
       true,
       {
@@ -115,7 +158,7 @@
       }
     ],
     "semicolon": [
-      false,
+      true,
       "always"
     ],
     "no-construct": true,

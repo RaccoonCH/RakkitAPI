@@ -30,7 +30,7 @@ const textCustom = {
     reverse: 7,
     hidden: 8
   }
-}
+};
 
 /**
  * Colorize a text into the console
@@ -38,15 +38,15 @@ const textCustom = {
  * @param params The color params
  */
 export const Color = (text, ...params: string[]): string => {
-  let resText = ''
+  let resText = "";
   params.forEach(p => {
-    const v = p.split('.')
-    resText += getCode(textCustom[v[0]][v[1]])
-  })
-  resText += text + getCode(textCustom.cmds.reset)
-  return resText
-}
+    const v = p.split(".");
+    resText += getCode(textCustom[v[0]][v[1]]);
+  });
+  resText += text + getCode(textCustom.cmds.reset);
+  return resText;
+};
 
 const getCode = (code: number): string => {
-  return `\x1b[${code}m`
-}
+  return `\x1b[${code}m`;
+};
