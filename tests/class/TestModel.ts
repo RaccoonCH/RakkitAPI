@@ -1,19 +1,19 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity({ name: 'test' })
+@Entity({ name: "test" })
 export class Test extends BaseEntity {
   constructor(text: string, index: number) {
-    super()
-    this.Text = text
-    this.Index = index
+    super();
+    this.Text = text;
+    this.Index = index;
   }
 
   @PrimaryGeneratedColumn()
-  public readonly Id: number
+  readonly Id: number;
 
   @Column()
-  public Text: string
+  Text: string;
 
   @Column()
-  public Index: number
+  Index: number;
 }

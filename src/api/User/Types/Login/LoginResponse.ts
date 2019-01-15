@@ -1,11 +1,11 @@
-import { GetableUser } from '../GetableUser'
-import { ArgsType, Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from "type-graphql";
+import { GetableUser } from "../GetableUser";
 
 @ObjectType()
 export class LoginResponse {
   @Field()
-  Token: string
+  Token: string;
 
   @Field(type => GetableUser)
-  User: GetableUser
+  User: GetableUser;
 }

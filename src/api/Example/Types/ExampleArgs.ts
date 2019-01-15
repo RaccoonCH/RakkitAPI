@@ -1,12 +1,18 @@
-import { ArgsType, InputType, Field } from 'type-graphql'
-import { GraphqlUtils } from '../../../class/App'
-import ExampleModel from '../ExampleModel'
+import { ArgsType, InputType, Field } from "type-graphql";
+import { GraphqlUtils } from "@logic";
+import ExampleModel from "@api/Example/ExampleModel";
 
 @InputType()
-export class ExampleType implements Pick<ExampleModel, 'Name'> {
+export abstract class ExampleType implements Pick<ExampleModel, "Id" | "Name" | "Text"> {
   @Field({ nullable: true })
-  public readonly Name: string
+  readonly Id: number;
+
+  @Field({ nullable: true })
+  readonly Name: string;
+
+  @Field({ nullable: true })
+  readonly Text: string;
 }
 
 @ArgsType()
-export class ExampleArgs extends GraphqlUtils.createArgsClass(ExampleType) {}
+export abstract class ExampleArgs extends GraphqlUtils.createArgsClass(ExampleModel) {}

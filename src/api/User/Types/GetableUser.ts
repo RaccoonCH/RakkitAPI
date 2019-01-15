@@ -1,24 +1,24 @@
-import { Field, ObjectType } from 'type-graphql'
-import UserModel from '../UserModel'
+import { Field, ObjectType } from "type-graphql";
+import UserModel from "../UserModel";
 
 @ObjectType()
-export class GetableUser implements Pick<UserModel, 'Id' | 'Name' | 'Email' | 'Role'> {
+export class GetableUser implements Pick<UserModel, "Id" | "Name" | "Email" | "Role"> {
   @Field()
-  Id: number
+  Id: number;
 
   @Field()
-  Name: string
+  Name: string;
 
   @Field()
-  Email: string
+  Email: string;
 
   @Field()
-  Role: string
+  Role: string;
 
   constructor(user: UserModel) {
-    this.Id = user.Id
-    this.Name = user.Name
-    this.Email = user.Email
-    this.Role = user.Role
+    this.Id = user.Id;
+    this.Name = user.Name;
+    this.Email = user.Email;
+    this.Role = user.Role;
   }
 }

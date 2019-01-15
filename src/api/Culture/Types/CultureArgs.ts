@@ -1,14 +1,14 @@
-import { ArgsType, Field, InputType } from 'type-graphql'
-import { GraphqlUtils } from '../../../class/App'
-import CultureModel from '../CultureModel'
+import { ArgsType, Field, InputType } from "type-graphql";
+import { GraphqlUtils } from "@logic";
+import CultureModel from "@api/Culture/CultureModel";
 
 @InputType()
-export class CultureType implements Pick<CultureModel, 'LangCode' | 'CountryCode'> {
+export class CultureType implements Pick<CultureModel, "LangCode" | "CountryCode"> {
   @Field({ nullable: true })
-  public readonly LangCode: string
+  readonly LangCode: string;
 
   @Field({ nullable: true })
-  public readonly CountryCode: string
+  readonly CountryCode: string;
 }
 
 @ArgsType()

@@ -1,11 +1,12 @@
-import { ObjectType, Field } from 'type-graphql'
-import ExampleModel from '../../ExampleModel'
+import { ObjectType, Field} from "type-graphql";
+import { IGetResponse } from "@types";
+import ExampleModel from "@api/Example/ExampleModel";
 
 @ObjectType()
-export class ExampleGetResponse {
-  @Field({ nullable: true })
-  count?: number
+export abstract class ExampleGetResponse implements IGetResponse {
+  @Field()
+  readonly count: number;
 
   @Field(type => [ExampleModel])
-  items: Array<ExampleModel>
+  readonly items: ExampleModel[];
 }

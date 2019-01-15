@@ -1,2 +1,2 @@
-export * from './PageArgs'
-export * from './Get/GetResponse'
+export * from "./PageArgs";
+export * from "./Get/GetResponse";
