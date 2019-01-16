@@ -17,6 +17,7 @@ import { Color } from "@misc";
 import { GetableUser } from "@api/User/Types/GetableUser";
 
 export class Main extends AppLoader {
+  private static _instance: Main;
   private _host: string;
   private _port: number;
   private _restEndpoint: string;
@@ -29,7 +30,6 @@ export class Main extends AppLoader {
   private _corsEnabled?: boolean;
   private _rps: IPackage[] = [];
   private _rpsAttributes: Map<string, Array<TypeParams & FrontType>> = new Map();
-  private static _instance: Main;
 
   static get Instance(): Main {
     return this._instance;
