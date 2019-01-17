@@ -1,4 +1,4 @@
-import { writeFile, mkdir, copyFile } from "fs";
+import { writeFile, mkdir, copyFile, readFileSync } from "fs";
 import { join } from "path";
 
 //#region Functions consts
@@ -39,7 +39,7 @@ const injectVariable: Map<string, Array<Array<string>>> = new Map([
 
 // Inject variable into the into the file
 for (const key of injectVariable.keys()) {
-  let newValue: string = fs.readFileSync(getFilePath(templateFolder, key), "utf-8");
+  let newValue: string = readFileSync(getFilePath(templateFolder, key), "utf-8");
   injectVariable.get(key).forEach(iv => {
     // Replace all value that match with the variable name
     newValue = newValue.replace(new RegExp(`_${iv[0].toUpperCase()}_`, "g"), iv[1]);
@@ -53,7 +53,7 @@ if (flags.includes("-m")) {
 }
 
 // The RakkitPackage dir
-const creationDir = join(rootDir, "src/api", `${RPNameUpperFirstLetter}/`);
+const creationDir = join(rootDir, "app", "api", `${RPNameUpperFirstLetter}/`);
 
 mkdir(creationDir, (err: Error) => {
   if (!err) {

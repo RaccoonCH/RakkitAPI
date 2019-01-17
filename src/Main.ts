@@ -17,6 +17,7 @@ import { Color } from "@misc";
 import { GetableUser } from "@api/User/Types/GetableUser";
 
 export class Main extends AppLoader {
+  private static _instance: Main;
   private _host: string;
   private _port: number;
   private _restEndpoint: string;
@@ -29,14 +30,13 @@ export class Main extends AppLoader {
   private _corsEnabled?: boolean;
   private _rps: IPackage[] = [];
   private _rpsAttributes: Map<string, Array<TypeParams & FrontType>> = new Map();
-  private static _instance: Main;
 
   static get Instance(): Main {
     return this._instance;
   }
 
   private constructor(params: IMain) {
-    super(params.apiPath || Path.join(__dirname, "api"));
+    super(params.apiPath || Path.join(__dirname, "..", "app", "api"));
     this._corsEnabled = params.corsEnabled || true;
     this._host = params.host || "localhost";
     this._port = params.port || 4000;
@@ -63,6 +63,46 @@ export class Main extends AppLoader {
       console.log(err);
     }
     return this.Instance;
+  }  
+
+  /**
+   * Restart REST and GraphQL service
+   */
+  async Restart() {
+    return this.startAllServices();
+  }
+
+  /**
+   * Add the rakkitPackage to the RP list to provide it
+   * @param rp The RPackage passed in params into the decorator
+   */
+  AddRp(rp: IPackage) {
+    this._rps.push({
+      ...rp,
+      attributes: this._rpsAttributes.get(rp.className)
+    });
+  }
+
+  /**
+   * This function is called by the Attributes decorator
+   * /!\ It's called before addRp
+   * @param className the classname that call the function
+   * @param key the property name
+   * @param rakkitFrontType the parameter in the decorator parameter
+   */
+  AddRpAttribute(
+    className: string,
+    key: string,
+    rakkitFrontType: FrontType,
+    rakkitAttributeParams: TypeParams
+  ) {
+    const rpAttributes = this._rpsAttributes.get(className) || [];
+    rpAttributes.push({
+      name: key,
+      ...rakkitAttributeParams,
+      ...rakkitFrontType
+    });
+    this._rpsAttributes.set(className, rpAttributes);
   }
 
   private async startAllServices() {
@@ -158,46 +198,6 @@ export class Main extends AppLoader {
       `GraphQL:  Started on http://${this._host}:${this._port}${this._apolloServer.graphqlPath}\n`,
       "fg.black", "bg.green"
     ));
-  }
-
-  /**
-   * Restart REST and GraphQL service
-   */
-  async Restart() {
-    return this.startAllServices();
-  }
-
-  /**
-   * Add the rakkitPackage to the RP list to provide it
-   * @param rp The RPackage passed in params into the decorator
-   */
-  AddRp(rp: IPackage) {
-    this._rps.push({
-      ...rp,
-      attributes: this._rpsAttributes.get(rp.className)
-    });
-  }
-
-  /**
-   * This function is called by the Attributes decorator
-   * /!\ It's called before addRp
-   * @param className the classname that call the function
-   * @param key the property name
-   * @param rakkitFrontType the parameter in the decorator parameter
-   */
-  AddRpAttribute(
-    className: string,
-    key: string,
-    rakkitFrontType: FrontType,
-    rakkitAttributeParams: TypeParams
-  ) {
-    const rpAttributes = this._rpsAttributes.get(className) || [];
-    rpAttributes.push({
-      name: key,
-      ...rakkitAttributeParams,
-      ...rakkitFrontType
-    });
-    this._rpsAttributes.set(className, rpAttributes);
   }
 }
 

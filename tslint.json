@@ -6,29 +6,28 @@
     "object-shorthand-properties-first": true,
     "unified-signatures": false,
     "adjacent-overload-signatures": true,
-    "member-access": [true, "no-public"],"member-ordering": [
-      false,
+    "member-access": [true, "no-public"],
+    "member-ordering": [
+      true,
       {
         "order": [
           "public-static-field",
-          "protected-static-field",
-          "private-static-field",
-
           "public-instance-field",
+          "protected-static-field",
           "protected-instance-field",
+          "private-static-field",
           "private-instance-field",
 
-          "public-static-method",
-          "protected-static-method",
-          "private-static-method",
-
           "public-constructor",
-          "protected-constructor",
           "private-constructor",
+          "protected-constructor",
 
+          "public-static-method",
           "public-instance-method",
+          "private-static-method",
+          "private-instance-method",
+          "protected-static-method",
           "protected-instance-method",
-          "private-instance-method"
         ]
       }
     ],

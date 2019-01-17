@@ -19,7 +19,8 @@
       "@types": ["src/types/index"],
       "@decorators": ["src/decorators/index"],
       "@misc": ["src/misc/index"],
-      "@api/*": ["src/api/*"],
+      "@api/*": ["app/api/*"],
+      "@app/*": ["app/*"],
       "@main": ["src/Main"],
       "@config": ["RakkitConfig"]
     }
